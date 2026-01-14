@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -13,7 +13,10 @@ import {
   FiAward,
   FiUsers,
   FiClock,
-  FiShield
+  FiShield,
+  FiVolume2,
+  FiVolumeX,
+  FiMaximize
 } from 'react-icons/fi';
 import api from '../utils/api';
 import hmoPartnersImg from '../assets/hmo-partners.jpg';
@@ -25,22 +28,44 @@ import doctor4Img from '../assets/doctor4.jpg';
 import doctor5Img from '../assets/doctor5.jpg';
 import doctor6Img from '../assets/doctor6.jpg';
 import hero1Img from '../assets/hero1.jpg';
-import hero2Img from '../assets/hero2.jpg';
 import hero3Img from '../assets/hero3.jpg';
 import hero4Img from '../assets/hero4.jpg';
 import hero5Img from '../assets/hero5.jpg';
 import hero6Img from '../assets/hero6.jpg';
+import schStoriesVideo from '../assets/video1.mp4';
 
 const Home = () => {
   // Hero slideshow state
   const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Video state and ref
+  const [isVideoMuted, setIsVideoMuted] = useState(true);
+  const videoRef = useRef(null);
+
+  const toggleVideoMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsVideoMuted(!isVideoMuted);
+    }
+  };
+
+  const toggleFullscreen = () => {
+    if (videoRef.current) {
+      if (videoRef.current.requestFullscreen) {
+        videoRef.current.requestFullscreen();
+      } else if (videoRef.current.webkitRequestFullscreen) {
+        videoRef.current.webkitRequestFullscreen();
+      } else if (videoRef.current.msRequestFullscreen) {
+        videoRef.current.msRequestFullscreen();
+      }
+    }
+  };
   const heroSlides = [
     { image: hero1Img, alt: 'Medical Team' },
-    { image: hero2Img, alt: 'Hospital Equipment' },
     { image: hero3Img, alt: 'Healthcare Professionals' },
-    { image: hero4Img, alt: 'Modern Hospital Room' },
-    { image: hero5Img, alt: 'Medical Care' },
-    { image: hero6Img, alt: 'Hospital Facility' }
+    { image: hero4Img, alt: 'Emergency Room' },
+    { image: hero5Img, alt: 'ICU Facility' },
+    { image: hero6Img, alt: 'Medical Staff' }
   ];
 
   // Auto-slide effect
@@ -153,8 +178,8 @@ const Home = () => {
 
   return (
     <div className="overflow-hidden">
-      {/* Section 1: Hero Section with Slideshow */}
-      <section className="relative h-[500px] md:h-[600px] overflow-hidden">
+      {/* Section 1: Hero Section with Slideshow - Full viewport height */}
+      <section className="relative h-[calc(100vh-100px)] min-h-[500px] overflow-hidden">
         {/* Slideshow Images */}
         {heroSlides.map((slide, index) => (
           <div
@@ -166,8 +191,8 @@ const Home = () => {
             <img
               src={slide.image}
               alt={slide.alt}
-              className="w-full h-full object-cover object-center scale-100"
-              style={{ objectPosition: 'center center' }}
+              className="w-full h-full object-cover scale-100"
+              style={{ objectPosition: 'center 30%' }}
             />
             {/* Dark overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
@@ -443,6 +468,7 @@ const Home = () => {
                     src={doctor.image}
                     alt={doctor.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    style={{ objectPosition: 'center 20%' }}
                   />
                 </div>
                 <div className="p-4 text-center">
@@ -563,24 +589,72 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="max-w-3xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-12 relative">
-              {/* Quote decoration */}
-              <div className="absolute top-6 left-6 text-8xl text-primary-100 font-serif leading-none">
-                "
-              </div>
-              <div className="relative z-10">
-                <blockquote className="text-xl md:text-2xl text-gray-700 italic mb-8 leading-relaxed pt-8">
-                  I am deeply Grateful to Socsargen County Hospital, it was here that I Truly Experienced genuine compassion and care.
-                </blockquote>
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center">
-                    <FiUser className="w-8 h-8 text-primary-600" />
+          <div className="max-w-5xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <div className="grid md:grid-cols-2">
+                {/* LEFT: Video */}
+                <div className="relative aspect-video md:aspect-auto md:h-full bg-black">
+                  <video
+                    ref={videoRef}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    className="w-full h-full object-cover"
+                  >
+                    <source src={schStoriesVideo} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                  {/* Video controls */}
+                  <div className="absolute bottom-4 left-4 flex gap-2">
+                    <button
+                      onClick={toggleVideoMute}
+                      className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300"
+                      aria-label={isVideoMuted ? 'Unmute video' : 'Mute video'}
+                    >
+                      {isVideoMuted ? (
+                        <FiVolumeX className="w-5 h-5 text-gray-700" />
+                      ) : (
+                        <FiVolume2 className="w-5 h-5 text-primary-600" />
+                      )}
+                    </button>
+                    <button
+                      onClick={toggleFullscreen}
+                      className="w-10 h-10 bg-white/90 hover:bg-white rounded-full flex items-center justify-center shadow-lg transition-all duration-300"
+                      aria-label="Fullscreen"
+                    >
+                      <FiMaximize className="w-5 h-5 text-gray-700 hover:text-primary-600" />
+                    </button>
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-800 text-lg">KARELLE M. RABIA</p>
-                    <p className="text-gray-500">Patient</p>
+                </div>
+
+                {/* RIGHT: Content */}
+                <div className="p-8 md:p-10 flex flex-col justify-center">
+                  <span className="inline-block bg-primary-100 text-primary-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-6 w-fit">
+                    Patient Highlight
+                  </span>
+                  <blockquote className="text-xl md:text-2xl text-gray-700 italic mb-8 leading-relaxed relative">
+                    <span className="absolute -top-4 -left-2 text-6xl text-primary-200 font-serif leading-none">"</span>
+                    <span className="relative z-10">
+                      I am deeply Grateful to Socsargen County Hospital, it was here that I Truly Experienced genuine compassion and care.
+                    </span>
+                  </blockquote>
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-14 h-14 bg-primary-100 rounded-full flex items-center justify-center">
+                      <FiUser className="w-7 h-7 text-primary-600" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800 text-lg">KARELLE M. RABIA</p>
+                      <p className="text-gray-500 text-sm">Patient</p>
+                    </div>
                   </div>
+                  <Link
+                    to="/contact"
+                    className="inline-flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 font-semibold px-6 py-3 rounded-lg transition-all duration-300 w-fit"
+                  >
+                    Contact Us
+                    <FiArrowRight className="w-5 h-5" />
+                  </Link>
                 </div>
               </div>
             </div>

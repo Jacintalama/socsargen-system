@@ -56,6 +56,11 @@
   outline-offset: 2px;
 }
 
+/* Remove focus outline when using focus:outline-none */
+.focus\:outline-none:focus {
+  outline: none !important;
+}
+
 /* Large readable fonts base (RA 7277 Compliance) */
 html {
   font-size: 16px;

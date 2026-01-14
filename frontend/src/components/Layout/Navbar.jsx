@@ -135,7 +135,7 @@ const Navbar = () => {
             {/* Logo */}
             <Link
               to="/"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 focus:outline-none"
             >
               <img
                 src={logo}
