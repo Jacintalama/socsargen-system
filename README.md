@@ -63,7 +63,22 @@ cd socsargen-system
 CREATE DATABASE socsargen_hospital;
 ```
 
-#### 2.3 (Optional) Kung naa kay password sa postgres user:
+#### 2.3 Import ang database backup (RECOMMENDED):
+
+Gamit og command prompt o terminal:
+
+```bash
+psql -U postgres -d socsargen_hospital -f database_backup.sql
+```
+
+**Windows with full path:**
+```bash
+"C:\Program Files\PostgreSQL\17\bin\psql.exe" -U postgres -d socsargen_hospital -f database_backup.sql
+```
+
+**Kung successful, skip na ang Step 3.3 (db:setup) kay naa na ang data!**
+
+#### 2.4 (Optional) Kung naa kay password sa postgres user:
 
 I-update ang connection string sa `backend/.env` file:
 
@@ -92,7 +107,19 @@ cd backend
 npm install
 ```
 
-#### 3.3 Setup ang database tables ug sample data:
+#### 3.3 Copy ang environment file:
+
+**IMPORTANTE NI! Kinahanglan nimo ni bago mo-start ang server.**
+
+```bash
+copy ..\.env.example .env
+```
+
+O manually: Copy ang `.env.example` file gikan sa root folder ngadto sa `backend/.env`
+
+#### 3.4 Setup ang database tables ug sample data:
+
+**SKIP NI kung nag-import ka og database_backup.sql sa Step 2.3!**
 
 ```bash
 npm run db:setup
@@ -113,7 +140,7 @@ Kung successful, makita nimo ni:
   Password: doctor123
 ```
 
-#### 3.4 (Optional) Add Gemini API Key para sa AI Chatbot:
+#### 3.5 (Optional) Add Gemini API Key para sa AI Chatbot:
 
 I-edit ang `backend/.env` file ug i-add ang imong Gemini API key:
 
@@ -123,7 +150,7 @@ GEMINI_API_KEY=imong-api-key-diri
 
 Kuhaon ang API key diri: https://aistudio.google.com/app/apikey
 
-#### 3.5 Start ang backend server:
+#### 3.6 Start ang backend server:
 
 ```bash
 npm start
