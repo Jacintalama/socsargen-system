@@ -1,0 +1,371 @@
+================================================================================
+                    SOFTWARE DEVELOPMENT AGREEMENT
+                    SOCSARGEN HOSPITAL SYSTEM
+================================================================================
+
+This Software Development Agreement ("Agreement") is entered into as of
+_________________ (Date), by and between:
+
+CLIENT:
+Name: SOCSARGEN COUNTY HOSPITAL
+Address: L. Arradaza St., Bula-Lagao Road, Lagao, General Santos City, 9500
+Contact: ___________________
+Email: socsargencountyhospital@gmail.com
+(Hereinafter referred to as "CLIENT")
+
+AND
+
+DEVELOPER:
+Name: ___________________
+Address: ___________________
+Contact: ___________________
+Email: ___________________
+(Hereinafter referred to as "DEVELOPER")
+
+--------------------------------------------------------------------------------
+                           ARTICLE I - PROJECT SCOPE
+--------------------------------------------------------------------------------
+
+1.1 PROJECT DESCRIPTION
+
+The DEVELOPER agrees to design, develop, and deliver a Hospital Management
+System ("System") for the CLIENT with the following features:
+
+A. PUBLIC WEBSITE FEATURES:
+   - Responsive homepage with hospital information
+   - Services and departments listing
+   - Doctor profiles and schedules
+   - Contact information and location
+   - News and announcements section
+   - AI-powered chatbot assistant (Gemini Flash)
+
+B. PATIENT PORTAL:
+   - User registration and authentication
+   - Online appointment booking system
+   - Appointment history and management
+   - Profile management
+   - Real-time chat support
+
+C. DOCTOR DASHBOARD:
+   - Appointment management
+   - Patient records access
+   - Schedule management
+   - Profile settings
+
+D. ADMIN DASHBOARD:
+   - User management (patients, doctors, staff)
+   - Appointment oversight
+   - Service and department management
+   - News/announcements management
+   - Analytics and reports
+   - System settings
+
+1.2 TECHNICAL SPECIFICATIONS
+
+The System shall be built using the following technologies:
+
+Frontend:
+   - React.js (JavaScript Framework)
+   - Tailwind CSS v4 (Styling)
+   - React Router (Navigation)
+   - Socket.io Client (Real-time features)
+
+Backend:
+   - Node.js with Express.js
+   - PostgreSQL Database
+   - JWT Authentication
+   - Socket.io (Real-time communication)
+   - Google Gemini Flash API (AI Chatbot)
+
+Hosting Requirements (to be provided by CLIENT):
+   - Web hosting with Node.js support
+   - PostgreSQL database server
+   - SSL Certificate
+   - Domain name
+
+--------------------------------------------------------------------------------
+                          ARTICLE II - PROJECT TIMELINE
+--------------------------------------------------------------------------------
+
+2.1 The project shall be completed according to the following schedule:
+
+Phase 1 - Planning & Design:          _____ days
+Phase 2 - Frontend Development:       _____ days
+Phase 3 - Backend Development:        _____ days
+Phase 4 - Integration & Testing:      _____ days
+Phase 5 - Deployment & Training:      _____ days
+
+TOTAL ESTIMATED DURATION:             _____ days/weeks
+
+2.2 The estimated completion date is _________________.
+
+2.3 Timeline adjustments may be made with mutual written consent of both parties.
+
+--------------------------------------------------------------------------------
+                        ARTICLE III - COMPENSATION
+--------------------------------------------------------------------------------
+
+3.1 PROJECT FEE
+
+The CLIENT agrees to pay the DEVELOPER a total project fee of:
+
+PHILIPPINE PESOS: ______________________ (PHP _______________)
+
+3.2 PAYMENT SCHEDULE
+
+[ ] Option A - Milestone-Based Payment:
+    - 30% upon signing of agreement:           PHP ___________
+    - 30% upon completion of development:      PHP ___________
+    - 40% upon final delivery and acceptance:  PHP ___________
+
+[ ] Option B - Progress-Based Payment:
+    - 50% upon signing of agreement:           PHP ___________
+    - 50% upon final delivery and acceptance:  PHP ___________
+
+[ ] Option C - Full Payment:
+    - 100% upon signing of agreement:          PHP ___________
+
+3.3 PAYMENT METHOD
+
+Payments shall be made via:
+[ ] Bank Transfer
+    Bank: ___________________
+    Account Name: ___________________
+    Account Number: ___________________
+
+[ ] GCash/Maya: ___________________
+
+[ ] Check payable to: ___________________
+
+[ ] Cash
+
+--------------------------------------------------------------------------------
+                         ARTICLE IV - DELIVERABLES
+--------------------------------------------------------------------------------
+
+4.1 The DEVELOPER shall deliver the following upon project completion:
+
+   a) Fully functional Hospital Management System
+   b) Complete source code
+   c) Database schema and seed data
+   d) User documentation/manual
+   e) Admin documentation
+   f) Deployment guide
+   g) 30-day post-deployment support
+
+4.2 SOURCE CODE OWNERSHIP
+
+Upon full payment, all source code, designs, and related materials shall
+become the exclusive property of the CLIENT.
+
+--------------------------------------------------------------------------------
+                    ARTICLE V - DEVELOPER RESPONSIBILITIES
+--------------------------------------------------------------------------------
+
+5.1 The DEVELOPER agrees to:
+
+   a) Complete the project according to agreed specifications
+   b) Provide regular progress updates
+   c) Maintain confidentiality of all CLIENT information
+   d) Deliver clean, documented, and maintainable code
+   e) Fix bugs and issues discovered during development
+   f) Provide 30 days of free support after deployment
+   g) Ensure compliance with Philippine Data Privacy Act (RA 10173)
+
+--------------------------------------------------------------------------------
+                      ARTICLE VI - CLIENT RESPONSIBILITIES
+--------------------------------------------------------------------------------
+
+6.1 The CLIENT agrees to:
+
+   a) Provide all necessary content, images, and information
+   b) Provide timely feedback and approvals
+   c) Make payments according to the agreed schedule
+   d) Provide access to hosting environment for deployment
+   e) Designate a point of contact for communication
+   f) Provide Gemini API key for AI chatbot functionality
+
+--------------------------------------------------------------------------------
+                   ARTICLE VII - WARRANTY AND MAINTENANCE
+--------------------------------------------------------------------------------
+
+7.1 WARRANTY PERIOD
+
+The DEVELOPER provides a 30-day warranty period from the date of final
+delivery, covering:
+   - Bug fixes for reported issues
+   - Minor adjustments and corrections
+   - Technical support via email/phone
+
+7.2 EXTENDED MAINTENANCE (Optional)
+
+After the warranty period, maintenance services may be availed at:
+   - Monthly retainer: PHP ___________/month
+   - Hourly rate: PHP ___________/hour
+   - Per-incident basis: To be quoted
+
+--------------------------------------------------------------------------------
+               ARTICLE VIII - CONFIDENTIALITY AND DATA PRIVACY
+--------------------------------------------------------------------------------
+
+8.1 Both parties agree to maintain strict confidentiality of all proprietary
+information shared during the project.
+
+8.2 The System shall be developed in compliance with:
+   - Republic Act No. 10173 (Data Privacy Act of 2012)
+   - DOH Health Information System Standards
+   - Hospital data protection requirements
+
+8.3 Patient data shall be encrypted and securely stored.
+
+--------------------------------------------------------------------------------
+                  ARTICLE IX - LIMITATION OF LIABILITY
+--------------------------------------------------------------------------------
+
+9.1 The DEVELOPER's liability shall be limited to the total amount paid
+under this Agreement.
+
+9.2 The DEVELOPER shall not be liable for:
+   - Data loss due to CLIENT's negligence
+   - Third-party service outages (hosting, APIs)
+   - Security breaches caused by CLIENT's failure to maintain security
+   - Loss of business or profits
+
+--------------------------------------------------------------------------------
+                         ARTICLE X - TERMINATION
+--------------------------------------------------------------------------------
+
+10.1 Either party may terminate this Agreement with 15 days written notice.
+
+10.2 Upon termination:
+   - CLIENT shall pay for all work completed to date
+   - DEVELOPER shall deliver all completed work
+   - Confidentiality obligations shall continue
+
+10.3 In case of CLIENT termination without cause:
+   - All payments made are non-refundable
+   - Completed work shall be delivered
+
+--------------------------------------------------------------------------------
+                       ARTICLE XI - DISPUTE RESOLUTION
+--------------------------------------------------------------------------------
+
+11.1 Any disputes arising from this Agreement shall be resolved through:
+   a) Good faith negotiation (15 days)
+   b) Mediation (if negotiation fails)
+   c) Arbitration under Philippine laws
+   d) Courts of General Santos City shall have jurisdiction
+
+--------------------------------------------------------------------------------
+                       ARTICLE XII - GENERAL PROVISIONS
+--------------------------------------------------------------------------------
+
+12.1 This Agreement constitutes the entire understanding between the parties.
+
+12.2 Amendments must be in writing and signed by both parties.
+
+12.3 This Agreement shall be governed by the laws of the Republic of the
+Philippines.
+
+12.4 If any provision is found invalid, the remaining provisions shall
+continue in effect.
+
+--------------------------------------------------------------------------------
+                             SIGNATURES
+--------------------------------------------------------------------------------
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the
+date first written above.
+
+
+CLIENT:                                    DEVELOPER:
+
+_____________________________              _____________________________
+Signature over Printed Name                Signature over Printed Name
+
+_____________________________              _____________________________
+Position/Title                             Position/Title
+
+_____________________________              _____________________________
+Date                                       Date
+
+
+WITNESSES:
+
+1. _____________________________           2. _____________________________
+   Signature over Printed Name                Signature over Printed Name
+
+
+================================================================================
+                              ANNEX A
+                         PROJECT SPECIFICATIONS
+================================================================================
+
+SYSTEM MODULES INCLUDED:
+
+1. AUTHENTICATION SYSTEM
+   - Email/password registration
+   - Secure login with JWT
+   - Password encryption (bcrypt)
+   - Role-based access control (Admin, Doctor, Patient)
+
+2. APPOINTMENT BOOKING SYSTEM
+   - Doctor selection by department
+   - Available time slot display
+   - Appointment confirmation
+   - Appointment status tracking
+   - Email notifications (optional)
+
+3. AI CHATBOT ASSISTANT
+   - Google Gemini Flash integration
+   - Hospital information responses
+   - Appointment guidance
+   - 24/7 automated support
+   - Escalation to human staff
+
+4. ADMIN DASHBOARD
+   - User management
+   - Doctor management
+   - Service management
+   - Appointment oversight
+   - Analytics dashboard
+
+5. DOCTOR DASHBOARD
+   - Appointment calendar
+   - Patient list
+   - Schedule management
+   - Profile settings
+
+6. PATIENT PORTAL
+   - Personal dashboard
+   - Appointment booking
+   - Appointment history
+   - Profile management
+
+================================================================================
+                              ANNEX B
+                         ACCEPTANCE CRITERIA
+================================================================================
+
+The System shall be considered complete and acceptable when:
+
+[ ] All listed features are functional
+[ ] System passes user acceptance testing
+[ ] No critical or major bugs remain
+[ ] Documentation is complete
+[ ] Training has been provided
+[ ] System is deployed and accessible
+
+CLIENT ACCEPTANCE:
+
+I, the undersigned, hereby accept the delivered System as complete and
+in accordance with the specifications outlined in this Agreement.
+
+
+_____________________________              _____________________________
+CLIENT Signature                           Date
+
+
+================================================================================
+                         END OF AGREEMENT
+================================================================================

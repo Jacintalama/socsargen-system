@@ -1,0 +1,140 @@
+const OpenAI = require('openai');
+
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+// System prompt for the hospital chatbot
+const SYSTEM_PROMPT = `You are a friendly and helpful assistant for Socsargen Hospital. Your name is "Socsargen Care Assistant".
+
+You can help visitors with:
+- General hospital information (location, contact, working hours)
+- Available services and departments
+- Doctor information and specializations
+- Appointment booking guidance
+- Basic health FAQs and wellness tips
+- Directions to the hospital
+
+IMPORTANT RULES:
+1. Always be polite, professional, and empathetic
+2. Never provide medical diagnoses or specific medical advice
+3. For urgent medical concerns, always advise to call emergency services or visit the ER
+4. If unsure about something, admit it and offer to connect with staff
+
+When the question involves:
+- Specific medical conditions or symptoms → Say: "For medical concerns, I recommend consulting with our doctors. Would you like me to connect you with our staff?"
+- Complaints or complex issues → Say: "I'd like to connect you with our staff who can better assist you."
+- Billing or insurance details → Say: "Let me connect you with our billing department."
+- Anything beyond your knowledge → Offer to escalate to staff
+
+Keep responses:
+- Concise (2-3 sentences when possible)
+- Friendly and warm
+- In English (but understand Filipino/Tagalog greetings)
+
+Hospital Info:
+- Name: Socsargen Hospital
+- Location: General Santos City, Philippines
+- Hours: 24/7 Emergency, OPD 8AM-5PM
+- Phone: (083) 123-4567`;
+
+/**
+ * Get AI response from OpenAI
+ * @param {string} message - User's message
+ * @param {Array} conversationHistory - Previous messages for context
+ * @returns {Object} - { message: string, escalate: boolean }
+ */
+const getAIResponse = async (message, conversationHistory = []) => {
+  try {
+    // Check if OpenAI API key is configured
+    if (!process.env.OPENAI_API_KEY) {
+      return {
+        message: "I'm currently in basic mode. For better assistance, please contact our staff directly or call (083) 123-4567.",
+        escalate: false
+      };
+    }
+
+    const messages = [
+      { role: 'system', content: SYSTEM_PROMPT },
+      ...conversationHistory.slice(-10), // Keep last 10 messages for context
+      { role: 'user', content: message }
+    ];
+
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages,
+      max_tokens: 300,
+      temperature: 0.7
+    });
+
+    const aiMessage = response.choices[0].message.content;
+
+    // Check if AI wants to escalate
+    const escalateKeywords = [
+      'connect you with',
+      'connect with our staff',
+      'billing department',
+      'speak to',
+      'talk to a human',
+      'escalate'
+    ];
+
+    const shouldEscalate = escalateKeywords.some(keyword =>
+      aiMessage.toLowerCase().includes(keyword)
+    );
+
+    return {
+      message: aiMessage,
+      escalate: shouldEscalate
+    };
+  } catch (error) {
+    console.error('OpenAI error:', error.message);
+
+    // Fallback response if OpenAI fails
+    return {
+      message: "I apologize, I'm having some technical difficulties. Let me connect you with our staff for better assistance.",
+      escalate: true
+    };
+  }
+};
+
+/**
+ * Simple keyword-based fallback (when no OpenAI key)
+ */
+const getFallbackResponse = (message) => {
+  const lowerMessage = message.toLowerCase();
+
+  if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('good')) {
+    return { message: "Hello! Welcome to Socsargen Hospital. How can I help you today?", escalate: false };
+  }
+
+  if (lowerMessage.includes('appointment') || lowerMessage.includes('book')) {
+    return { message: "To book an appointment, please register or login first, then go to the Doctors page and select your preferred doctor and time slot.", escalate: false };
+  }
+
+  if (lowerMessage.includes('doctor') || lowerMessage.includes('specialist')) {
+    return { message: "You can view our doctors and their specializations on the Doctors page. Each doctor has their schedule and available time slots listed.", escalate: false };
+  }
+
+  if (lowerMessage.includes('emergency') || lowerMessage.includes('urgent')) {
+    return { message: "For emergencies, please call our Emergency hotline at (083) 123-4567 or visit our Emergency Room which is open 24/7.", escalate: true };
+  }
+
+  if (lowerMessage.includes('location') || lowerMessage.includes('address') || lowerMessage.includes('where')) {
+    return { message: "Socsargen Hospital is located in General Santos City, Philippines. You can find us on Google Maps or contact us at (083) 123-4567 for directions.", escalate: false };
+  }
+
+  if (lowerMessage.includes('hours') || lowerMessage.includes('open') || lowerMessage.includes('time')) {
+    return { message: "Our Emergency Room is open 24/7. Outpatient Department (OPD) hours are 8:00 AM to 5:00 PM, Monday to Saturday.", escalate: false };
+  }
+
+  if (lowerMessage.includes('service')) {
+    return { message: "We offer various services including Emergency Care, Outpatient Services, Laboratory, Radiology, Pharmacy, and Surgery. Visit our Services page for more details.", escalate: false };
+  }
+
+  // Default response
+  return { message: "Thank you for your message. For specific inquiries, please contact our staff at (083) 123-4567 or visit our Contact page.", escalate: false };
+};
+
+module.exports = { getAIResponse, getFallbackResponse };
