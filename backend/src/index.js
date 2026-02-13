@@ -92,7 +92,9 @@ app.get('/api/health', (req, res) => {
     status: 'ok',
     message: 'Socsargen Hospital API is running',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    dbConfigured: !!process.env.DATABASE_URL,
+    jwtConfigured: !!process.env.JWT_SECRET
   });
 });
 
