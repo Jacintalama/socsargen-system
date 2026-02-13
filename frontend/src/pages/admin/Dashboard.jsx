@@ -169,50 +169,50 @@ const AdminDashboard = () => {
 
         {/* Quick Links */}
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-10 gap-2 sm:gap-4 mb-8">
-          <Link to="/admin/appointments" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/appointments" className="card text-center hover:shadow-lg transition p-4">
             <FiCalendar className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight break-words">Appointments</p>
+            <p className="text-sm font-medium">Appointments</p>
           </Link>
-          <Link to="/admin/doctors" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/doctors" className="card text-center hover:shadow-lg transition p-4">
             <FiUsers className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">Doctors</p>
+            <p className="text-sm font-medium">Doctors</p>
           </Link>
-          <Link to="/admin/services" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/services" className="card text-center hover:shadow-lg transition p-4">
             <FiActivity className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">Services</p>
+            <p className="text-sm font-medium">Services</p>
           </Link>
-          <Link to="/admin/news" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/news" className="card text-center hover:shadow-lg transition p-4">
             <FiFileText className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">News</p>
+            <p className="text-sm font-medium">News</p>
           </Link>
-          <Link to="/admin/sch-stories" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/sch-stories" className="card text-center hover:shadow-lg transition p-4">
             <FiVideo className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">SCH Stories</p>
+            <p className="text-sm font-medium">SCH Stories</p>
           </Link>
-          <Link to="/admin/jobs" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/jobs" className="card text-center hover:shadow-lg transition p-4">
             <FiBriefcase className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">Jobs</p>
+            <p className="text-sm font-medium">Jobs</p>
           </Link>
-          <Link to="/admin/applications" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden relative">
+          <Link to="/admin/applications" className="card text-center hover:shadow-lg transition p-4 relative">
             <FiInbox className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">Applications</p>
+            <p className="text-sm font-medium">Applications</p>
             {appStats?.pending > 0 && (
               <span className="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {appStats.pending}
               </span>
             )}
           </Link>
-          <Link to="/admin/analytics" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/analytics" className="card text-center hover:shadow-lg transition p-4">
             <FiBarChart2 className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">Analytics</p>
+            <p className="text-sm font-medium">Analytics</p>
           </Link>
-          <Link to="/admin/chat" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/chat" className="card text-center hover:shadow-lg transition p-4">
             <FiMessageSquare className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">Chat</p>
+            <p className="text-sm font-medium">Chat</p>
           </Link>
-          <Link to="/admin/hr" className="card text-center hover:shadow-lg transition !p-3 sm:!p-4 overflow-hidden">
+          <Link to="/admin/hr" className="card text-center hover:shadow-lg transition p-4">
             <FiUserPlus className="text-primary-600 text-2xl mx-auto mb-2" />
-            <p className="text-xs sm:text-sm font-medium leading-tight">HR Management</p>
+            <p className="text-sm font-medium">HR Management</p>
           </Link>
         </div>
 
