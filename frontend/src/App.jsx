@@ -53,7 +53,7 @@ import HRApplications from './pages/hr/Applications';
 
 function App() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col transition-colors duration-200">
       {/* Scroll to top on route change */}
       <ScrollToTop />
 

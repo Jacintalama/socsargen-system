@@ -4,6 +4,7 @@ import { FiMenu, FiX, FiUser, FiLogOut, FiChevronDown, FiLoader } from 'react-ic
 import { useAuth } from '../../hooks/useAuth';
 import TopBar from './TopBar';
 import DropdownMenu from './DropdownMenu';
+import ThemeToggle from './ThemeToggle';
 import logo from '../../assets/newlogo.jfif';
 
 // Dropdown data configurations
@@ -136,7 +137,7 @@ const Navbar = () => {
       <TopBar />
 
       {/* Main Navigation */}
-      <nav className="bg-white shadow-lg border-b border-gray-100">
+      <nav className="bg-white dark:bg-slate-900 shadow-lg border-b border-gray-100 dark:border-slate-700 transition-colors duration-200">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -209,6 +210,9 @@ const Navbar = () => {
                 Contact Us
               </Link>
 
+              {/* Theme Toggle */}
+              <ThemeToggle />
+
               {/* Login/User */}
               {user ? (
                 <div className="flex items-center space-x-2 ml-2">
@@ -244,20 +248,23 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="lg:hidden p-2 text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isOpen}
-            >
-              {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-            </button>
+            {/* Mobile: Theme Toggle + Menu Button */}
+            <div className="lg:hidden flex items-center gap-1">
+              <ThemeToggle />
+              <button
+                className="p-2 text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition dark:text-slate-300 dark:hover:bg-slate-700"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle menu"
+                aria-expanded={isOpen}
+              >
+                {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+              </button>
+            </div>
           </div>
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="lg:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
+            <div className="lg:hidden pb-4 border-t border-gray-200 dark:border-slate-700 mt-2 pt-4">
               {/* Home */}
               <Link
                 to="/"

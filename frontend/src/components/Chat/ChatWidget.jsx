@@ -52,7 +52,7 @@ const ChatWidget = () => {
     <div className="fixed bottom-4 right-4 z-50 sm:bottom-4 sm:right-4">
       {isOpen ? (
         <div
-          className="bg-white shadow-2xl flex flex-col overflow-hidden fixed inset-0 sm:relative sm:inset-auto sm:rounded-2xl sm:w-[380px] sm:h-[550px]"
+          className="bg-white dark:bg-slate-900 shadow-2xl flex flex-col overflow-hidden fixed inset-0 sm:relative sm:inset-auto sm:rounded-2xl sm:w-[380px] sm:h-[550px]"
           role="dialog"
           aria-label="Chat with hospital assistant"
         >
@@ -84,14 +84,14 @@ const ChatWidget = () => {
           </div>
 
           {/* Messages Area */}
-          <div className="flex-grow overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50 to-white">
+          <div className="flex-grow overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-gray-50 to-white dark:from-slate-900 dark:to-slate-800">
             {messages.length === 0 && (
               <div className="text-center py-6">
                 <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <FiHeart className="w-8 h-8 text-primary-600" />
                 </div>
-                <h4 className="font-semibold text-gray-800 mb-2">Welcome to SCH!</h4>
-                <p className="text-gray-500 text-sm mb-4">How can we help you today?</p>
+                <h4 className="font-semibold text-gray-800 dark:text-slate-100 mb-2">Welcome to SCH!</h4>
+                <p className="text-gray-500 dark:text-slate-400 text-sm mb-4">How can we help you today?</p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {quickActions.map((action, idx) => (
                     <button
@@ -127,7 +127,7 @@ const ChatWidget = () => {
                       ? 'bg-green-50 text-green-800 rounded-2xl rounded-bl-md border border-green-200'
                       : msg.sender === 'system'
                       ? 'bg-amber-50 text-amber-800 text-center w-full text-sm rounded-xl border border-amber-200'
-                      : 'bg-white text-gray-800 shadow-md rounded-2xl rounded-bl-md border border-gray-100'
+                      : 'bg-white dark:bg-slate-800 text-gray-800 dark:text-slate-200 shadow-md rounded-2xl rounded-bl-md border border-gray-100 dark:border-slate-700'
                   }`}
                 >
                   {msg.sender === 'staff' && (
@@ -150,7 +150,7 @@ const ChatWidget = () => {
                 <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center mr-2 flex-shrink-0">
                   <FiHeart className="w-4 h-4 text-primary-600" />
                 </div>
-                <div className="bg-white text-gray-500 px-4 py-3 rounded-2xl shadow-md border border-gray-100">
+                <div className="bg-white dark:bg-slate-800 text-gray-500 px-4 py-3 rounded-2xl shadow-md border border-gray-100 dark:border-slate-700">
                   <div className="flex space-x-1.5">
                     <div className="w-2 h-2 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                     <div className="w-2 h-2 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -165,7 +165,7 @@ const ChatWidget = () => {
 
           {/* Talk to Human Button - shows when not escalated and has messages */}
           {!isEscalated && messages.length > 2 && (
-            <div className="px-4 py-2 border-t border-gray-100 bg-amber-50">
+            <div className="px-4 py-2 border-t border-gray-100 dark:border-slate-700 bg-amber-50 dark:bg-amber-900/20">
               <button
                 onClick={requestHumanAssistance}
                 className="w-full flex items-center justify-center gap-2 text-amber-700 hover:text-amber-800 text-sm font-medium py-2 hover:bg-amber-100 rounded-lg transition"
@@ -177,7 +177,7 @@ const ChatWidget = () => {
           )}
 
           {/* Input Area */}
-          <form onSubmit={handleSend} className="p-4 border-t border-gray-100 bg-white">
+          <form onSubmit={handleSend} className="p-4 border-t border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-900">
             <div className="flex gap-3 items-center">
               <input
                 ref={inputRef}
@@ -185,7 +185,7 @@ const ChatWidget = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={isEscalated ? "Message staff..." : "Type your message..."}
-                className="flex-grow px-4 py-3 bg-gray-50 border-0 rounded-xl focus:ring-2 focus:ring-primary-500 focus:bg-white text-sm transition"
+                className="flex-grow px-4 py-3 bg-gray-50 dark:bg-slate-800 border-0 rounded-xl focus:ring-2 focus:ring-primary-500 focus:bg-white dark:focus:bg-slate-700 text-sm transition"
                 disabled={!isConnected}
                 aria-label="Chat message input"
               />
