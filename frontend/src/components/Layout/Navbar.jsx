@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiMenu, FiX, FiUser, FiLogOut, FiChevronDown, FiLoader } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
 import TopBar from './TopBar';
@@ -80,7 +80,7 @@ const doctorsDropdown = {
       ]
     }
   ],
-  footer: { label: 'View All Doctors →', href: '/doctors' }
+  footer: { label: 'View All Doctors', href: '/doctors' }
 };
 
 const aboutDropdown = {
@@ -110,12 +110,21 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileDropdown, setMobileDropdown] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
+  // Detect scroll for glassmorphism effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleLogout = async () => {
     setLoggingOut(true);
-    // Small delay for better UX feedback
     await new Promise(resolve => setTimeout(resolve, 500));
     logout();
     setLoggingOut(false);
@@ -137,88 +146,53 @@ const Navbar = () => {
       <TopBar />
 
       {/* Main Navigation */}
-      <nav className="bg-white dark:bg-slate-900 shadow-lg border-b border-gray-100 dark:border-slate-700 transition-colors duration-200">
+      <nav className={`transition-all duration-300 border-b ${
+        scrolled
+          ? 'bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg shadow-md border-gray-100/50 dark:border-slate-700/50'
+          : 'bg-white dark:bg-slate-900 shadow-sm border-gray-100 dark:border-slate-700'
+      }`}>
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-16 lg:h-[68px]">
             {/* Logo */}
             <Link
               to="/"
-              className="flex items-center gap-2 focus:outline-none"
+              className="flex items-center gap-2.5 focus:outline-none group"
             >
-              <img
-                src={logo}
-                alt="Socsargen County Hospital Logo"
-                className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
-              />
+              <div className="relative">
+                <img
+                  src={logo}
+                  alt="Socsargen County Hospital Logo"
+                  className="h-10 w-10 sm:h-11 sm:w-11 object-contain rounded-full ring-2 ring-primary-100 group-hover:ring-primary-300 transition-all"
+                />
+              </div>
               <div className="flex flex-col leading-tight">
-                <span className="text-xs sm:text-sm font-bold text-primary-700 uppercase tracking-wide">
-                  SOCSARGEN COUNTY HOSPITAL
+                <span className="text-xs sm:text-sm font-extrabold text-primary-800 dark:text-primary-400 uppercase tracking-wider" style={{ fontFamily: 'var(--font-display)' }}>
+                  SOCSARGEN
                 </span>
-                <span className="text-[10px] sm:text-xs text-gray-500">
-                  General Santos City
+                <span className="text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 tracking-wide font-medium">
+                  County Hospital
                 </span>
               </div>
             </Link>
 
-            {/* Desktop Menu + Login */}
-            <div className="hidden lg:flex items-center space-x-1">
-              {/* Home */}
-              <Link
-                to="/"
-                className="nav-link"
-              >
-                Home
-              </Link>
+            {/* Desktop Menu */}
+            <div className="hidden lg:flex items-center space-x-0.5">
+              <Link to="/" className="nav-link">Home</Link>
+              <Link to="/news" className="nav-link">News</Link>
+              <DropdownMenu label="Our Services" columns={servicesDropdown.columns} header={servicesDropdown.header} footer={servicesDropdown.footer} />
+              <DropdownMenu label="Our Doctors" columns={doctorsDropdown.columns} header={doctorsDropdown.header} footer={doctorsDropdown.footer} />
+              <DropdownMenu label="About Us" columns={aboutDropdown.columns} header={aboutDropdown.header} footer={aboutDropdown.footer} />
+              <Link to="/contact" className="nav-link">Contact Us</Link>
 
-              {/* News */}
-              <Link
-                to="/news"
-                className="nav-link"
-              >
-                News
-              </Link>
-
-              {/* Our Services Dropdown */}
-              <DropdownMenu
-                label="Our Services"
-                columns={servicesDropdown.columns}
-                header={servicesDropdown.header}
-                footer={servicesDropdown.footer}
-              />
-
-              {/* Our Doctors Dropdown */}
-              <DropdownMenu
-                label="Our Doctors"
-                columns={doctorsDropdown.columns}
-                header={doctorsDropdown.header}
-                footer={doctorsDropdown.footer}
-              />
-
-              {/* About Us Dropdown */}
-              <DropdownMenu
-                label="About Us"
-                columns={aboutDropdown.columns}
-                header={aboutDropdown.header}
-                footer={aboutDropdown.footer}
-              />
-
-              {/* Contact Us */}
-              <Link
-                to="/contact"
-                className="nav-link"
-              >
-                Contact Us
-              </Link>
-
-              {/* Theme Toggle */}
               <ThemeToggle />
 
               {/* Login/User */}
               {user ? (
-                <div className="flex items-center space-x-2 ml-2">
+                <div className="flex items-center space-x-2 ml-3">
                   <Link
                     to={getDashboardPath()}
-                    className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
+                    className="flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white px-4 py-2 rounded-lg font-semibold hover:from-primary-700 hover:to-primary-800 transition-all shadow-sm hover:shadow-md text-sm"
+                    style={{ fontFamily: 'var(--font-display)' }}
                   >
                     <FiUser className="w-4 h-4" />
                     <span>Dashboard</span>
@@ -226,7 +200,7 @@ const Navbar = () => {
                   <button
                     onClick={handleLogout}
                     disabled={loggingOut}
-                    className="flex items-center gap-1 text-gray-600 hover:text-primary-600 transition p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50"
+                    className="flex items-center gap-1 text-gray-500 hover:text-primary-600 transition p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50"
                     aria-label="Logout"
                   >
                     {loggingOut ? (
@@ -239,7 +213,8 @@ const Navbar = () => {
               ) : (
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition ml-2"
+                  className="flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white px-5 py-2 rounded-lg font-semibold hover:from-primary-700 hover:to-primary-800 transition-all ml-3 shadow-sm hover:shadow-md text-sm"
+                  style={{ fontFamily: 'var(--font-display)' }}
                   aria-label="Login"
                 >
                   <FiUser className="w-4 h-4" />
@@ -252,7 +227,7 @@ const Navbar = () => {
             <div className="lg:hidden flex items-center gap-1">
               <ThemeToggle />
               <button
-                className="p-2 text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition dark:text-slate-300 dark:hover:bg-slate-700"
+                className="p-2 text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition dark:text-slate-300 dark:hover:bg-slate-700"
                 onClick={() => setIsOpen(!isOpen)}
                 aria-label="Toggle menu"
                 aria-expanded={isOpen}
@@ -264,177 +239,96 @@ const Navbar = () => {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="lg:hidden pb-4 border-t border-gray-200 dark:border-slate-700 mt-2 pt-4">
-              {/* Home */}
-              <Link
-                to="/"
-                className="block py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Home
-              </Link>
+            <div className="lg:hidden pb-4 border-t border-gray-100 dark:border-slate-700 mt-2 pt-4 animate-fade-in">
+              <Link to="/" className="block py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium" onClick={() => setIsOpen(false)}>Home</Link>
+              <Link to="/news" className="block py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium" onClick={() => setIsOpen(false)}>News</Link>
 
-              {/* News */}
-              <Link
-                to="/news"
-                className="block py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                News
-              </Link>
-
-              {/* Our Services - Mobile Accordion */}
-              <div className="border-b border-gray-100">
+              {/* Mobile Accordion - Services */}
+              <div className="border-b border-gray-50">
                 <button
-                  className="w-full flex items-center justify-between py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
+                  className="w-full flex items-center justify-between py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium"
                   onClick={() => toggleMobileDropdown('services')}
                   aria-expanded={mobileDropdown === 'services'}
-                  aria-label="Toggle Our Services menu"
                 >
                   <span>Our Services</span>
-                  <FiChevronDown
-                    className={`w-5 h-5 transition-transform ${mobileDropdown === 'services' ? 'rotate-180' : ''}`}
-                  />
+                  <FiChevronDown className={`w-5 h-5 transition-transform ${mobileDropdown === 'services' ? 'rotate-180' : ''}`} />
                 </button>
                 {mobileDropdown === 'services' && (
-                  <div className="pl-4 pb-3 space-y-1">
-                    <p className="text-xs text-gray-500 px-2 py-2 italic">
-                      {servicesDropdown.header}
-                    </p>
+                  <div className="pl-4 pb-3 space-y-0.5">
+                    <p className="text-xs text-gray-400 px-3 py-2 italic">{servicesDropdown.header}</p>
                     {servicesDropdown.columns.flatMap((col) =>
                       col.items.map((item) => (
-                        <Link
-                          key={`service-${item.label}`}
-                          to={item.href}
-                          className="block py-3 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.label}
-                        </Link>
+                        <Link key={`service-${item.label}`} to={item.href} className="block py-2.5 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded transition" onClick={() => setIsOpen(false)}>{item.label}</Link>
                       ))
                     )}
                   </div>
                 )}
               </div>
 
-              {/* Our Doctors - Mobile Accordion */}
-              <div className="border-b border-gray-100">
+              {/* Mobile Accordion - Doctors */}
+              <div className="border-b border-gray-50">
                 <button
-                  className="w-full flex items-center justify-between py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
+                  className="w-full flex items-center justify-between py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium"
                   onClick={() => toggleMobileDropdown('doctors')}
                   aria-expanded={mobileDropdown === 'doctors'}
-                  aria-label="Toggle Our Doctors menu"
                 >
                   <span>Our Doctors</span>
-                  <FiChevronDown
-                    className={`w-5 h-5 transition-transform ${mobileDropdown === 'doctors' ? 'rotate-180' : ''}`}
-                  />
+                  <FiChevronDown className={`w-5 h-5 transition-transform ${mobileDropdown === 'doctors' ? 'rotate-180' : ''}`} />
                 </button>
                 {mobileDropdown === 'doctors' && (
-                  <div className="pl-4 pb-3 space-y-1">
-                    <p className="text-xs text-gray-500 px-2 py-2 italic">
-                      {doctorsDropdown.header}
-                    </p>
+                  <div className="pl-4 pb-3 space-y-0.5">
+                    <p className="text-xs text-gray-400 px-3 py-2 italic">{doctorsDropdown.header}</p>
                     {doctorsDropdown.columns.flatMap((col) =>
                       col.items.map((item) => (
-                        <Link
-                          key={`doctor-${item.label}`}
-                          to={item.href}
-                          className="block py-3 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.label}
-                        </Link>
+                        <Link key={`doctor-${item.label}`} to={item.href} className="block py-2.5 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded transition" onClick={() => setIsOpen(false)}>{item.label}</Link>
                       ))
                     )}
                   </div>
                 )}
               </div>
 
-              {/* About Us - Mobile Accordion */}
-              <div className="border-b border-gray-100">
+              {/* Mobile Accordion - About */}
+              <div className="border-b border-gray-50">
                 <button
-                  className="w-full flex items-center justify-between py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
+                  className="w-full flex items-center justify-between py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium"
                   onClick={() => toggleMobileDropdown('about')}
                   aria-expanded={mobileDropdown === 'about'}
-                  aria-label="Toggle About Us menu"
                 >
                   <span>About Us</span>
-                  <FiChevronDown
-                    className={`w-5 h-5 transition-transform ${mobileDropdown === 'about' ? 'rotate-180' : ''}`}
-                  />
+                  <FiChevronDown className={`w-5 h-5 transition-transform ${mobileDropdown === 'about' ? 'rotate-180' : ''}`} />
                 </button>
                 {mobileDropdown === 'about' && (
-                  <div className="pl-4 pb-3 space-y-1">
-                    <p className="text-xs text-gray-500 px-2 py-2 italic">
-                      {aboutDropdown.header}
-                    </p>
+                  <div className="pl-4 pb-3 space-y-0.5">
+                    <p className="text-xs text-gray-400 px-3 py-2 italic">{aboutDropdown.header}</p>
                     {aboutDropdown.columns.flatMap((col) =>
                       col.items.map((item) => (
-                        <Link
-                          key={`about-${item.label}`}
-                          to={item.href}
-                          className="block py-3 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          {item.label}
-                        </Link>
+                        <Link key={`about-${item.label}`} to={item.href} className="block py-2.5 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded transition" onClick={() => setIsOpen(false)}>{item.label}</Link>
                       ))
                     )}
                   </div>
                 )}
               </div>
 
-              {/* Contact Us */}
-              <Link
-                to="/contact"
-                className="block py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
-                onClick={() => setIsOpen(false)}
-              >
-                Contact Us
-              </Link>
+              <Link to="/contact" className="block py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium" onClick={() => setIsOpen(false)}>Contact Us</Link>
 
-              {/* Login/User Section */}
+              {/* Login/User */}
               <div className="border-t border-gray-200 mt-3 pt-3">
                 {user ? (
                   <>
-                    <Link
-                      to={getDashboardPath()}
-                      className="flex items-center gap-2 py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <FiUser className="w-5 h-5" />
-                      Dashboard
+                    <Link to={getDashboardPath()} className="flex items-center gap-2 py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium" onClick={() => setIsOpen(false)}>
+                      <FiUser className="w-5 h-5" /> Dashboard
                     </Link>
                     <button
-                      onClick={() => {
-                        handleLogout();
-                        setIsOpen(false);
-                      }}
+                      onClick={() => { handleLogout(); setIsOpen(false); }}
                       disabled={loggingOut}
-                      className="flex items-center gap-2 w-full py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium text-left disabled:opacity-50"
+                      className="flex items-center gap-2 w-full py-3 px-3 text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium text-left disabled:opacity-50"
                     >
-                      {loggingOut ? (
-                        <>
-                          <FiLoader className="w-5 h-5 animate-spin" />
-                          Logging out...
-                        </>
-                      ) : (
-                        <>
-                          <FiLogOut className="w-5 h-5" />
-                          Logout
-                        </>
-                      )}
+                      {loggingOut ? (<><FiLoader className="w-5 h-5 animate-spin" /> Logging out...</>) : (<><FiLogOut className="w-5 h-5" /> Logout</>)}
                     </button>
                   </>
                 ) : (
-                  <Link
-                    to="/login"
-                    className="flex items-center gap-2 py-3 px-2 text-primary-600 hover:bg-primary-50 rounded-lg transition font-medium"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <FiUser className="w-5 h-5" />
-                    Login
+                  <Link to="/login" className="flex items-center gap-2 py-3 px-3 text-primary-600 hover:bg-primary-50 rounded-lg transition font-semibold" onClick={() => setIsOpen(false)}>
+                    <FiUser className="w-5 h-5" /> Login
                   </Link>
                 )}
               </div>

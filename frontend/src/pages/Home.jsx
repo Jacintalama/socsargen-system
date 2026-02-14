@@ -301,8 +301,8 @@ const Home = () => {
 
   return (
     <div className="overflow-hidden">
-      {/* Section 1: Hero Section with Slideshow - Full viewport height */}
-      <section className="relative h-[calc(100vh-100px)] min-h-[500px] overflow-hidden">
+      {/* Section 1: Hero Section with Slideshow */}
+      <section className="relative h-[calc(100vh-80px)] sm:h-[calc(100vh-100px)] min-h-[480px] overflow-hidden">
         {/* Slideshow Images */}
         {heroSlides.map((slide, index) => (
           <div
@@ -314,53 +314,84 @@ const Home = () => {
             <img
               src={slide.image}
               alt={slide.alt}
-              className="w-full h-full object-cover scale-100"
+              className="w-full h-full object-cover"
               style={{ objectPosition: 'center 30%' }}
             />
-            {/* Dark overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-black/30"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
           </div>
         ))}
+
+        {/* Decorative elements */}
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/40 to-transparent z-[5]"></div>
 
         {/* Content */}
         <div className="absolute inset-0 flex items-center z-10">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-                Welcome to Socsargen County Hospital
-              </h1>
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 mb-6 inline-block">
-                <p className="text-accent-400 font-semibold text-sm uppercase tracking-wider mb-1">
-                  Featured Facility
-                </p>
-                <h2 className="text-2xl md:text-3xl font-bold text-white">
-                  {heroSlides[currentSlide].facility}
-                </h2>
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-3 sm:px-4 py-1 sm:py-1.5 mb-4 sm:mb-6">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-accent-400 rounded-full animate-pulse"></span>
+                <span className="text-accent-300 font-semibold text-[10px] sm:text-xs uppercase tracking-widest" style={{ fontFamily: 'var(--font-display)' }}>
+                  Featured: {heroSlides[currentSlide].facility}
+                </span>
               </div>
-              <p className="text-lg md:text-xl text-gray-200 mb-8 font-light">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3 sm:mb-5 leading-[1.1] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+                Welcome to<br />
+                <span className="bg-gradient-to-r from-primary-300 to-accent-300 bg-clip-text text-transparent">
+                  Socsargen County
+                </span><br />
+                Hospital
+              </h1>
+              <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-5 sm:mb-8 leading-relaxed max-w-xl">
                 {heroSlides[currentSlide].description}
               </p>
-              <Link
-                to={heroSlides[currentSlide].link}
-                className="inline-flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-              >
-                Explore {heroSlides[currentSlide].facility}
-                <FiArrowRight className="w-5 h-5" />
-              </Link>
+              <div className="flex flex-wrap gap-2.5 sm:gap-3">
+                <Link
+                  to={heroSlides[currentSlide].link}
+                  className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white hover:from-primary-600 hover:to-primary-700 font-semibold px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-primary-500/25 hover:shadow-xl text-sm sm:text-base"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  <span className="sm:hidden">Explore</span>
+                  <span className="hidden sm:inline">Explore {heroSlides[currentSlide].facility}</span>
+                  <FiArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </Link>
+                <Link
+                  to="/services"
+                  className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 font-semibold px-5 sm:px-7 py-3 sm:py-3.5 rounded-xl transition-all duration-300 text-sm sm:text-base"
+                  style={{ fontFamily: 'var(--font-display)' }}
+                >
+                  All Services
+                </Link>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Slide Indicators (Dots) */}
-        <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+        {/* Navigation Arrows */}
+        <button
+          onClick={goToPrevSlide}
+          className="absolute left-2 sm:left-4 md:left-8 top-1/2 -translate-y-1/2 z-10 w-9 h-9 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all border border-white/10"
+          aria-label="Previous slide"
+        >
+          <FiChevronLeft className="w-6 h-6" />
+        </button>
+        <button
+          onClick={goToNextSlide}
+          className="absolute right-2 sm:right-4 md:right-8 top-1/2 -translate-y-1/2 z-10 w-9 h-9 sm:w-12 sm:h-12 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white transition-all border border-white/10"
+          aria-label="Next slide"
+        >
+          <FiChevronRight className="w-6 h-6" />
+        </button>
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
           {heroSlides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`h-1.5 rounded-full transition-all duration-500 ${
                 index === currentSlide
-                  ? 'bg-white w-8'
-                  : 'bg-white/50 hover:bg-white/75'
+                  ? 'bg-white w-10'
+                  : 'bg-white/40 hover:bg-white/60 w-4'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />
@@ -369,78 +400,66 @@ const Home = () => {
       </section>
 
       {/* Section 2: Quick Help Section */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-3">
-              Get high-quality healthcare in the heart of General Santos City
+      <section className="py-12 sm:py-20 bg-white relative overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #059669 1px, transparent 0)', backgroundSize: '40px 40px' }}></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-8 sm:mb-14">
+            <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>How can we help?</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
+              Quality Healthcare in<br className="hidden sm:block" /> General Santos City
             </h2>
-            <p className="text-lg text-gray-600">
-              How can we help you today?
-            </p>
+            <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-3 sm:mt-4"></div>
           </div>
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {/* Find a Doctor Card */}
+          <div className="grid grid-cols-3 gap-3 sm:gap-6 max-w-5xl mx-auto">
             <Link
               to="/doctors"
-              className="group bg-white border-2 border-gray-100 rounded-xl p-8 text-center hover:border-primary-500 hover:shadow-xl transition-all duration-300"
+              className="group bg-white border border-gray-100 rounded-xl sm:rounded-2xl p-4 sm:p-8 text-center hover:shadow-2xl hover:shadow-primary-100 hover:-translate-y-1 transition-all duration-500"
             >
-              <div className="w-20 h-20 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center group-hover:bg-primary-500 transition-colors duration-300">
-                <FiUser className="w-10 h-10 text-primary-600 group-hover:text-white transition-colors duration-300" />
+              <div className="mx-auto mb-3 sm:mb-6 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-primary-500 group-hover:to-primary-600 transition-all duration-500 rotate-3 group-hover:rotate-0" style={{ width: '52px', height: '52px' }}>
+                <FiUser className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 group-hover:text-white transition-colors duration-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary-600">
-                Find a Doctor
-              </h3>
-              <p className="text-gray-500 text-sm">
-                Search our medical specialists
-              </p>
+              <h3 className="text-xs sm:text-lg font-bold text-gray-800 mb-1 sm:mb-2 group-hover:text-primary-600 leading-tight" style={{ fontFamily: 'var(--font-display)' }}>Find a Doctor</h3>
+              <p className="text-gray-500 text-[10px] sm:text-sm hidden sm:block">Search our medical specialists</p>
             </Link>
 
-            {/* Book Executive Check Up Card */}
             <Link
               to="/services"
-              className="group bg-white border-2 border-gray-100 rounded-xl p-8 text-center hover:border-primary-500 hover:shadow-xl transition-all duration-300"
+              className="group bg-white border border-gray-100 rounded-xl sm:rounded-2xl p-4 sm:p-8 text-center hover:shadow-2xl hover:shadow-primary-100 hover:-translate-y-1 transition-all duration-500"
             >
-              <div className="w-20 h-20 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center group-hover:bg-primary-500 transition-colors duration-300">
-                <FiActivity className="w-10 h-10 text-primary-600 group-hover:text-white transition-colors duration-300" />
+              <div className="mx-auto mb-3 sm:mb-6 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-primary-500 group-hover:to-primary-600 transition-all duration-500 -rotate-3 group-hover:rotate-0" style={{ width: '52px', height: '52px' }}>
+                <FiActivity className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 group-hover:text-white transition-colors duration-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary-600">
-                Book an Executive Check Up
-              </h3>
-              <p className="text-gray-500 text-sm">
-                Comprehensive health screening
-              </p>
+              <h3 className="text-xs sm:text-lg font-bold text-gray-800 mb-1 sm:mb-2 group-hover:text-primary-600 leading-tight" style={{ fontFamily: 'var(--font-display)' }}>Book a Check Up</h3>
+              <p className="text-gray-500 text-[10px] sm:text-sm hidden sm:block">Comprehensive health screening</p>
             </Link>
 
-            {/* Wellness Packages Card */}
             <Link
               to="/services"
-              className="group bg-white border-2 border-gray-100 rounded-xl p-8 text-center hover:border-primary-500 hover:shadow-xl transition-all duration-300"
+              className="group bg-white border border-gray-100 rounded-xl sm:rounded-2xl p-4 sm:p-8 text-center hover:shadow-2xl hover:shadow-primary-100 hover:-translate-y-1 transition-all duration-500"
             >
-              <div className="w-20 h-20 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center group-hover:bg-primary-500 transition-colors duration-300">
-                <FiHeart className="w-10 h-10 text-primary-600 group-hover:text-white transition-colors duration-300" />
+              <div className="mx-auto mb-3 sm:mb-6 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-primary-500 group-hover:to-primary-600 transition-all duration-500 rotate-3 group-hover:rotate-0" style={{ width: '52px', height: '52px' }}>
+                <FiHeart className="w-6 h-6 sm:w-8 sm:h-8 text-primary-600 group-hover:text-white transition-colors duration-500" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-2 group-hover:text-primary-600">
-                Learn about our Wellness Packages
-              </h3>
-              <p className="text-gray-500 text-sm">
-                Preventive care programs
-              </p>
+              <h3 className="text-xs sm:text-lg font-bold text-gray-800 mb-1 sm:mb-2 group-hover:text-primary-600 leading-tight" style={{ fontFamily: 'var(--font-display)' }}>Wellness Packages</h3>
+              <p className="text-gray-500 text-[10px] sm:text-sm hidden sm:block">Preventive care programs</p>
             </Link>
           </div>
         </div>
       </section>
 
       {/* Section 3: Our Services Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 sm:py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <div className="text-center mb-8 sm:mb-14">
+            <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>What We Offer</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Our Services
             </h2>
-            <p className="text-gray-600 max-w-3xl mx-auto text-lg">
-              With a full range of services and advanced treatments, we're here to make sure every patient receives the care they need with heart, skill, and commitment.
+            <p className="text-gray-500 max-w-2xl mx-auto">
+              With a full range of services and advanced treatments, we ensure every patient receives the care they need with heart, skill, and commitment.
             </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-5"></div>
           </div>
 
           {servicesLoading ? (
@@ -562,28 +581,31 @@ const Home = () => {
       </section>
 
       {/* Section 4: Facilities Overview */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+      <section className="py-12 sm:py-20 bg-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-primary-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-8 sm:mb-14">
+            <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Our Facilities</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               World-Class Facilities
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto">
               Our hospital is equipped with state-of-the-art facilities to provide you with the best healthcare experience.
             </p>
+            <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-4 sm:mt-5"></div>
           </div>
 
-          <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-6 max-w-6xl mx-auto">
             {heroSlides.map((slide, index) => (
               <Link
                 key={index}
                 to={slide.link}
-                className="group bg-white border-2 border-gray-100 rounded-xl p-6 text-center hover:border-primary-500 hover:shadow-xl transition-all duration-300"
+                className="group bg-white border border-gray-100 rounded-xl sm:rounded-2xl p-3 sm:p-6 text-center hover:shadow-2xl hover:shadow-primary-100 hover:-translate-y-1 transition-all duration-500"
               >
-                <div className="w-16 h-16 mx-auto mb-4 bg-primary-100 rounded-full flex items-center justify-center group-hover:bg-primary-500 transition-colors duration-300">
-                  <FiActivity className="w-8 h-8 text-primary-600 group-hover:text-white transition-colors duration-300" />
+                <div className="w-11 h-11 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-4 bg-gradient-to-br from-primary-50 to-primary-100 rounded-xl sm:rounded-2xl flex items-center justify-center group-hover:from-primary-500 group-hover:to-primary-600 transition-all duration-500 rotate-3 group-hover:rotate-0">
+                  <FiActivity className="w-5 h-5 sm:w-7 sm:h-7 text-primary-600 group-hover:text-white transition-colors duration-500" />
                 </div>
-                <h3 className="text-sm font-semibold text-gray-800 group-hover:text-primary-600">
+                <h3 className="text-[10px] sm:text-sm font-bold text-gray-800 group-hover:text-primary-600 transition-colors leading-tight" style={{ fontFamily: 'var(--font-display)' }}>
                   {slide.facility}
                 </h3>
               </Link>
@@ -593,15 +615,20 @@ const Home = () => {
       </section>
 
       {/* Section 5: Meet Our Doctors Section */}
-      <section className="py-10 sm:py-16 bg-primary-700">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4">
+      <section className="py-14 sm:py-20 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-800 relative overflow-hidden">
+        {/* Decorative circles */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="absolute bottom-0 left-0 w-72 h-72 bg-primary-600/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-10 sm:mb-14">
+            <p className="text-primary-300 font-semibold text-sm uppercase tracking-widest mb-3" style={{ fontFamily: 'var(--font-display)' }}>Our Medical Team</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Meet our Doctors
             </h2>
-            <p className="text-primary-100 text-sm sm:text-lg max-w-2xl mx-auto">
+            <p className="text-primary-200/80 text-sm sm:text-base max-w-2xl mx-auto">
               Meet the seasoned experts of Socsargen County Hospital.
             </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-primary-400 to-accent-400 mx-auto rounded-full mt-5"></div>
           </div>
 
           {/* Doctor Categories - horizontal scroll on mobile */}
@@ -679,30 +706,32 @@ const Home = () => {
       </section>
 
       {/* Section 6: Health Packages Section */}
-      <section className="py-16 bg-white">
+      <section className="py-12 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <div className="text-center mb-8 sm:mb-14">
+            <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Care Plans</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Health Packages
             </h2>
-            <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-              With a full range of services and advanced treatments, we're here to make sure every patient receives the care they need with heart, skill, and commitment.
+            <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto">
+              Comprehensive care packages designed to make quality healthcare accessible and affordable for every patient.
             </p>
+            <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-4 sm:mt-5"></div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6 max-w-6xl mx-auto">
             {healthPackages.map((pkg) => (
               <div
                 key={pkg.id}
-                className="bg-gradient-to-br from-primary-50 to-white border border-primary-100 rounded-xl p-6 hover:shadow-lg hover:border-primary-300 transition-all duration-300 group"
+                className="bg-gradient-to-br from-primary-50 to-white border border-primary-100 rounded-xl p-4 sm:p-6 hover:shadow-lg hover:border-primary-300 transition-all duration-300 group"
               >
-                <div className="w-16 h-16 bg-primary-100 rounded-xl flex items-center justify-center mb-4 text-primary-600 group-hover:bg-primary-500 group-hover:text-white transition-colors duration-300">
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-primary-100 rounded-xl flex items-center justify-center mb-3 sm:mb-4 text-primary-600 group-hover:bg-primary-500 group-hover:text-white transition-colors duration-300">
                   {pkg.icon}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                <h3 className="text-sm sm:text-lg font-semibold text-gray-800 mb-1 sm:mb-2 leading-tight">
                   {pkg.title}
                 </h3>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-xs sm:text-sm">
                   {pkg.description}
                 </p>
               </div>
@@ -722,29 +751,34 @@ const Home = () => {
       </section>
 
       {/* Section 7: About Hospital Section */}
-      <section className="py-16 bg-gradient-to-r from-primary-700 to-primary-800 text-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Socsargen County Hospital is a private and an ISO-accredited tertiary hospital located in General Santos City.
+      <section className="py-12 sm:py-20 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-800 text-white relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/3"></div>
+        <div className="absolute bottom-0 right-0 w-72 h-72 bg-accent-500/10 rounded-full blur-3xl translate-y-1/2 translate-x-1/3"></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="text-center mb-8 sm:mb-12">
+            <p className="text-primary-300 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>About Us</p>
+            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-extrabold mb-3 sm:mb-4 tracking-tight max-w-4xl mx-auto" style={{ fontFamily: 'var(--font-display)' }}>
+              A Private ISO-Accredited Tertiary Hospital in General Santos City
             </h2>
+            <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-primary-400 to-accent-400 mx-auto rounded-full mt-4 sm:mt-5"></div>
           </div>
           <div className="max-w-6xl mx-auto">
             <div className="bg-white rounded-2xl overflow-hidden shadow-2xl">
               <div className="grid md:grid-cols-2">
-                <div className="p-8 md:p-12 flex flex-col justify-center">
-                  <p className="text-primary-600 text-lg leading-relaxed mb-6">
-                    Serving the people of General Santos City and setting the standards of healthcare in Region 12
-                  </p>
+                <div className="p-6 sm:p-8 md:p-12 flex flex-col justify-center">
+                  <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-4" style={{ fontFamily: 'var(--font-display)' }}>Established</p>
                   <Link
                     to="/about/history"
-                    className="text-6xl md:text-7xl font-bold text-primary-700 mb-4 block hover:text-primary-500 transition-colors cursor-pointer"
+                    className="text-5xl sm:text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-primary-600 to-primary-800 bg-clip-text text-transparent mb-2 sm:mb-4 block hover:from-primary-500 hover:to-primary-700 transition-all cursor-pointer" style={{ fontFamily: 'var(--font-display)' }}
                   >
                     1992
                   </Link>
+                  <p className="text-gray-500 text-sm sm:text-lg leading-relaxed mb-4 sm:mb-6">
+                    Serving the people of General Santos City and setting the standards of healthcare in Region 12.
+                  </p>
                   <Link
                     to="/about/history"
-                    className="inline-flex items-center gap-2 bg-primary-600 text-white hover:bg-primary-700 font-semibold px-6 py-3 rounded-lg transition-all duration-300 w-fit"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 font-semibold px-6 py-3 rounded-xl transition-all duration-300 w-fit shadow-lg hover:shadow-xl" style={{ fontFamily: 'var(--font-display)' }}
                   >
                     History & Milestones
                     <FiArrowRight className="w-5 h-5" />
@@ -764,15 +798,17 @@ const Home = () => {
       </section>
 
       {/* Section 8: Patient Stories/Testimonials Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-12 sm:py-20 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <div className="text-center mb-8 sm:mb-14">
+            <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Testimonials</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Our SCH Stories
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto">
               Featuring real patients whose journeys remind us that healing starts with compassion and care.
             </p>
+            <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-4 sm:mt-5"></div>
           </div>
 
           <div className="max-w-5xl mx-auto relative">
@@ -838,23 +874,23 @@ const Home = () => {
                 </div>
 
                 {/* RIGHT: Content */}
-                <div className="p-8 md:p-10 flex flex-col justify-center">
-                  <span className="inline-block bg-primary-100 text-primary-700 text-sm font-semibold px-4 py-1.5 rounded-full mb-6 w-fit">
+                <div className="p-5 sm:p-8 md:p-10 flex flex-col justify-center">
+                  <span className="inline-block bg-primary-100 text-primary-700 text-xs sm:text-sm font-semibold px-3 sm:px-4 py-1 sm:py-1.5 rounded-full mb-4 sm:mb-6 w-fit">
                     {currentStory?.title || 'Patient Highlight'}
                   </span>
-                  <blockquote className="text-xl md:text-2xl text-gray-700 italic mb-8 leading-relaxed relative">
-                    <span className="absolute -top-4 -left-2 text-6xl text-primary-200 font-serif leading-none">"</span>
+                  <blockquote className="text-base sm:text-xl md:text-2xl text-gray-700 italic mb-5 sm:mb-8 leading-relaxed relative">
+                    <span className="absolute -top-3 -left-1 sm:-top-4 sm:-left-2 text-4xl sm:text-6xl text-primary-200 font-serif leading-none">"</span>
                     <span className="relative z-10">
                       {currentStory?.quote || 'I am deeply Grateful to Socsargen County Hospital, it was here that I Truly Experienced genuine compassion and care.'}
                     </span>
                   </blockquote>
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="w-14 h-14 bg-primary-100 rounded-full flex items-center justify-center">
-                      <FiUser className="w-7 h-7 text-primary-600" />
+                  <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <FiUser className="w-5 h-5 sm:w-7 sm:h-7 text-primary-600" />
                     </div>
                     <div>
-                      <p className="font-semibold text-gray-800 text-lg">{currentStory?.patientName || 'KARELLE M. RABIA'}</p>
-                      <p className="text-gray-500 text-sm">Patient{currentStory?.year ? ` - ${currentStory.year}` : ''}</p>
+                      <p className="font-semibold text-gray-800 text-sm sm:text-lg">{currentStory?.patientName || 'KARELLE M. RABIA'}</p>
+                      <p className="text-gray-500 text-xs sm:text-sm">Patient{currentStory?.year ? ` - ${currentStory.year}` : ''}</p>
                     </div>
                   </div>
 
@@ -905,15 +941,17 @@ const Home = () => {
       </section>
 
       {/* Section 9: HMO Partners Section */}
-      <section className="py-16 bg-white">
+      <section className="py-12 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <div className="text-center mb-8 sm:mb-14">
+            <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Partners</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               HMO &amp; Insurance Partners
             </h2>
-            <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-              We take pride in partnering with various Health Maintenance Organizations (HMOs) to make quality healthcare more accessible to our community.
+            <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto">
+              We partner with leading Health Maintenance Organizations (HMOs) to make quality healthcare more accessible.
             </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-5"></div>
           </div>
 
           {/* Search Bar */}
@@ -986,15 +1024,17 @@ const Home = () => {
       </section>
 
       {/* Facebook Section */}
-      <section className="py-16 bg-gradient-to-br from-primary-600 to-primary-800">
-        <div className="max-w-5xl mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-8">
+      <section className="py-12 sm:py-20 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-800 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-primary-600/20 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4"></div>
+        <div className="max-w-5xl mx-auto px-4 relative">
+          <div className="flex flex-col lg:flex-row items-center gap-6 sm:gap-10">
             {/* Left Content */}
             <div className="text-center lg:text-left text-white lg:flex-1">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              <p className="text-primary-300 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Follow Us</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
                 Stay Connected with <br className="hidden md:block" />Socsargen County Hospital!
               </h2>
-              <p className="text-primary-100 text-lg leading-relaxed">
+              <p className="text-primary-200/80 text-sm sm:text-lg leading-relaxed">
                 Don't miss out on the latest hospital news, health tips,
                 and upcoming events. Like our Facebook page to stay
                 informed and be part of our growing community!
@@ -1003,7 +1043,7 @@ const Home = () => {
                 href="https://www.facebook.com/SocsargenCountyHospitalOfficial"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 mt-6 bg-white text-primary-700 hover:bg-primary-50 font-semibold px-6 py-3 rounded-lg transition-all duration-300"
+                className="inline-flex items-center gap-2 mt-6 bg-white text-primary-700 hover:bg-primary-50 font-semibold px-6 py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl" style={{ fontFamily: 'var(--font-display)' }}
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
@@ -1049,14 +1089,16 @@ const Home = () => {
       </section>
 
       {/* Section 10: News and Events Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+      <section className="py-12 sm:py-20 bg-gray-50">
+        <div className="container mx-auto px-4 text-center mb-6 sm:mb-10">
+          <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Stay Updated</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
             News and Events
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto">
             Stay updated on Socsargen County Hospital latest news, events, and wellness initiatives.
           </p>
+          <div className="w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-5"></div>
         </div>
 
         {newsLoading ? (
@@ -1101,15 +1143,17 @@ const Home = () => {
       </section>
 
       {/* Section 11: Careers/Hiring Section */}
-      <section className="py-16 bg-white">
+      <section className="py-12 sm:py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+          <div className="text-center mb-8 sm:mb-14">
+            <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Careers</p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Join Our Team
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto">
               Be part of our mission to provide quality healthcare. Explore career opportunities at Socsargen County Hospital.
             </p>
+            <div className="w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-5"></div>
           </div>
 
           {jobsLoading ? (
@@ -1170,49 +1214,52 @@ const Home = () => {
       </section>
 
       {/* Section 12: Contact Preview Section */}
-      <section className="py-16 bg-gradient-to-br from-primary-600 to-primary-800 text-white">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-20 bg-gradient-to-br from-primary-800 via-primary-700 to-primary-800 text-white relative overflow-hidden">
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-600/15 rounded-full blur-3xl translate-y-1/2 -translate-x-1/4"></div>
+        <div className="container mx-auto px-4 relative">
           <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <div className="text-center mb-8 sm:mb-14">
+              <p className="text-primary-300 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Get In Touch</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
                 Contact Us
               </h2>
-              <p className="text-primary-100 text-lg">
+              <p className="text-primary-200/80 text-sm sm:text-lg">
                 We are here to take care of you
               </p>
+              <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-primary-400 to-accent-400 mx-auto rounded-full mt-4 sm:mt-5"></div>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 mb-10">
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
-                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FiPhone className="w-7 h-7" />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-10">
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-5 sm:p-8 text-center hover:bg-white/20 transition-all duration-500 hover:-translate-y-1 group">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors">
+                  <FiPhone className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Phone</h3>
-                <p className="text-primary-100">553-8906 / 553-8907</p>
-                <p className="text-primary-100">0932-692-4708</p>
+                <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2" style={{ fontFamily: 'var(--font-display)' }}>Phone</h3>
+                <p className="text-primary-200/80 text-sm">553-8906 / 553-8907</p>
+                <p className="text-primary-200/80 text-sm">0932-692-4708</p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
-                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FiMail className="w-7 h-7" />
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-5 sm:p-8 text-center hover:bg-white/20 transition-all duration-500 hover:-translate-y-1 group">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors">
+                  <FiMail className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Email</h3>
-                <p className="text-primary-100">edpsocsargen@gmail.com</p>
+                <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2" style={{ fontFamily: 'var(--font-display)' }}>Email</h3>
+                <p className="text-primary-200/80 text-sm">edpsocsargen@gmail.com</p>
               </div>
 
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 text-center hover:bg-white/20 transition-colors">
-                <div className="w-14 h-14 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FiMapPin className="w-7 h-7" />
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-5 sm:p-8 text-center hover:bg-white/20 transition-all duration-500 hover:-translate-y-1 group">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 bg-white/20 rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:bg-white/30 transition-colors">
+                  <FiMapPin className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">Address</h3>
-                <p className="text-primary-100 text-sm">L. Arradaza St., Bula-Lagao Road, Lagao, General Santos City</p>
+                <h3 className="font-bold text-base sm:text-lg mb-1 sm:mb-2" style={{ fontFamily: 'var(--font-display)' }}>Address</h3>
+                <p className="text-primary-200/80 text-xs sm:text-sm">L. Arradaza St., Bula-Lagao Road, Lagao, General Santos City</p>
               </div>
             </div>
 
             <div className="text-center">
               <Link
                 to="/contact"
-                className="inline-flex items-center gap-2 bg-white text-primary-700 hover:bg-primary-50 font-semibold px-8 py-3 rounded-lg transition-all duration-300"
+                className="inline-flex items-center gap-2 bg-white text-primary-700 hover:bg-primary-50 font-semibold px-8 py-3.5 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl" style={{ fontFamily: 'var(--font-display)' }}
               >
                 Get in Touch
                 <FiArrowRight className="w-5 h-5" />
@@ -1223,17 +1270,22 @@ const Home = () => {
       </section>
 
       {/* Emergency CTA Bar */}
-      <section className="py-6 bg-accent-500">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+      <section className="py-3 sm:py-5 bg-gradient-to-r from-accent-500 via-accent-400 to-accent-500 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.05) 20px, rgba(0,0,0,0.05) 40px)' }}></div>
+        <div className="container mx-auto px-4 relative">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-1.5 sm:gap-4 text-center">
             <div className="flex items-center gap-2">
-              <FiClock className="w-6 h-6 text-accent-900" />
-              <span className="font-semibold text-accent-900">24/7 Emergency Services Available</span>
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent-900/10 rounded-lg flex items-center justify-center">
+                <FiClock className="w-4 h-4 sm:w-5 sm:h-5 text-accent-900" />
+              </div>
+              <span className="font-bold text-accent-900 tracking-wide text-xs sm:text-base" style={{ fontFamily: 'var(--font-display)' }}>24/7 Emergency Services</span>
             </div>
-            <span className="hidden md:inline text-accent-700">|</span>
+            <span className="hidden sm:inline text-accent-700/40">|</span>
             <div className="flex items-center gap-2">
-              <FiPhone className="w-6 h-6 text-accent-900" />
-              <span className="font-bold text-accent-900 text-lg">Emergency Hotline: 553-8906 / 0932-692-4708</span>
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-accent-900/10 rounded-lg flex items-center justify-center">
+                <FiPhone className="w-4 h-4 sm:w-5 sm:h-5 text-accent-900" />
+              </div>
+              <span className="font-extrabold text-accent-900 text-sm sm:text-lg tracking-wide" style={{ fontFamily: 'var(--font-display)' }}>553-8906 / 0932-692-4708</span>
             </div>
           </div>
         </div>
@@ -1241,11 +1293,13 @@ const Home = () => {
 
       {/* Find Us on the Map Section */}
       <section className="bg-white">
-        <div className="text-center py-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Find Us on the Map</h2>
-          <p className="text-gray-600 max-w-2xl mx-auto px-4">
+        <div className="text-center py-8 sm:py-14">
+          <p className="text-primary-600 font-semibold text-xs sm:text-sm uppercase tracking-widest mb-2 sm:mb-3" style={{ fontFamily: 'var(--font-display)' }}>Location</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 sm:mb-4 tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>Find Us on the Map</h2>
+          <p className="text-gray-500 text-sm sm:text-base max-w-2xl mx-auto px-4">
             Visit us at Socsargen County Hospital in Lagao, General Santos City
           </p>
+          <div className="w-12 sm:w-16 h-1 bg-gradient-to-r from-primary-500 to-accent-400 mx-auto rounded-full mt-4 sm:mt-5"></div>
         </div>
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5610.317122515964!2d125.18693377253548!3d6.118144569811807!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x32f79fb707dc388d%3A0x3dc68b9d61e2c8c4!2sSocsargen%20County%20Hospital!5e0!3m2!1sen!2sph!4v1768029721585!5m2!1sen!2sph"
