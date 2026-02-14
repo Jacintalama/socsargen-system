@@ -62,7 +62,11 @@ const handleChatMessage = async (sessionId, userId, message) => {
   // Save bot response
   await saveMessage(sessionId, userId, result.message, 'bot');
 
-  return result;
+  return {
+    message: result.message,
+    escalate: result.escalate,
+    suggestions: result.suggestions || ['Find a Doctor', 'Our Services', 'Contact Info']
+  };
 };
 
 /**

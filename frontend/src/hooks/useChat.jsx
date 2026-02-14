@@ -31,6 +31,7 @@ export const useChat = () => {
   const [isEscalated, setIsEscalated] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [sessionId, setSessionId] = useState(null);
+  const [suggestions, setSuggestions] = useState(['Find a Doctor', 'Book Appointment', 'Our Services', 'Hours & Location']);
 
   useEffect(() => {
     const session = getOrCreateSessionId();
@@ -106,6 +107,10 @@ export const useChat = () => {
         staffName: data.staffName || null,
         timestamp: new Date(data.timestamp)
       }]);
+      // Update dynamic suggestions if provided
+      if (data.suggestions && data.suggestions.length > 0) {
+        setSuggestions(data.suggestions);
+      }
     });
 
     newSocket.on('chat_escalated', (data) => {
@@ -193,6 +198,7 @@ export const useChat = () => {
     isConnected,
     isEscalated,
     isTyping,
-    requestHumanAssistance
+    requestHumanAssistance,
+    suggestions
   };
 };

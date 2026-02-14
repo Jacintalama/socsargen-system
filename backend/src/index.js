@@ -230,7 +230,8 @@ io.on('connection', (socket) => {
         socket.emit('chat_response', {
           message: result.message,
           sender: 'bot',
-          timestamp: new Date()
+          timestamp: new Date(),
+          suggestions: result.suggestions || []
         });
 
         // Check if should escalate

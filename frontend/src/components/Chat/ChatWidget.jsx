@@ -8,7 +8,7 @@ const ChatWidget = () => {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const { messages, sendMessage, isConnected, isEscalated, isTyping, requestHumanAssistance } = useChat();
+  const { messages, sendMessage, isConnected, isEscalated, isTyping, requestHumanAssistance, suggestions } = useChat();
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -39,14 +39,6 @@ const ChatWidget = () => {
       hour12: true
     });
   };
-
-  // Quick action buttons
-  const quickActions = [
-    'Book Appointment',
-    'Find a Doctor',
-    'Services',
-    'Contact Info'
-  ];
 
   return (
     <div className="fixed bottom-4 right-4 z-50 sm:bottom-4 sm:right-4">
@@ -93,16 +85,13 @@ const ChatWidget = () => {
                 <h4 className="font-semibold text-gray-800 dark:text-slate-100 mb-2">Welcome to SCH!</h4>
                 <p className="text-gray-500 dark:text-slate-400 text-sm mb-4">How can we help you today?</p>
                 <div className="flex flex-wrap justify-center gap-2">
-                  {quickActions.map((action, idx) => (
+                  {suggestions.map((suggestion, idx) => (
                     <button
                       key={idx}
-                      onClick={() => {
-                        setInput(action);
-                        sendMessage(action);
-                      }}
+                      onClick={() => sendMessage(suggestion)}
                       className="bg-primary-50 text-primary-700 text-xs px-3 py-2 rounded-full hover:bg-primary-100 transition font-medium"
                     >
-                      {action}
+                      {suggestion}
                     </button>
                   ))}
                 </div>
@@ -163,16 +152,29 @@ const ChatWidget = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Talk to Human Button - shows when not escalated and has messages */}
-          {!isEscalated && messages.length > 2 && (
-            <div className="px-4 py-2 border-t border-gray-100 dark:border-slate-700 bg-amber-50 dark:bg-amber-900/20">
-              <button
-                onClick={requestHumanAssistance}
-                className="w-full flex items-center justify-center gap-2 text-amber-700 hover:text-amber-800 text-sm font-medium py-2 hover:bg-amber-100 rounded-lg transition"
-              >
-                <FiUsers size={16} />
-                Need more help? Talk to a staff member
-              </button>
+          {/* Dynamic Suggestions + Talk to Staff */}
+          {!isEscalated && messages.length > 0 && (
+            <div className="px-4 py-2 border-t border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50">
+              <div className="flex flex-wrap gap-1.5 mb-1.5">
+                {suggestions.map((suggestion, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => sendMessage(suggestion)}
+                    className="bg-white dark:bg-slate-700 text-primary-700 dark:text-primary-300 text-xs px-3 py-1.5 rounded-full hover:bg-primary-50 dark:hover:bg-slate-600 transition font-medium border border-gray-200 dark:border-slate-600"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
+              {messages.length > 2 && (
+                <button
+                  onClick={requestHumanAssistance}
+                  className="w-full flex items-center justify-center gap-1.5 text-amber-600 hover:text-amber-700 text-xs font-medium py-1.5 hover:bg-amber-50 rounded-lg transition"
+                >
+                  <FiUsers size={14} />
+                  Talk to a staff member
+                </button>
+              )}
             </div>
           )}
 
