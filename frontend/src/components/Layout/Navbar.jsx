@@ -1,58 +1,57 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { FiMenu, FiX, FiUser, FiLogOut, FiChevronDown } from 'react-icons/fi';
+import { FiMenu, FiX, FiUser, FiLogOut, FiChevronDown, FiLoader } from 'react-icons/fi';
 import { useAuth } from '../../hooks/useAuth';
 import TopBar from './TopBar';
 import DropdownMenu from './DropdownMenu';
+import ThemeToggle from './ThemeToggle';
 import logo from '../../assets/newlogo.jfif';
 
 // Dropdown data configurations
 const servicesDropdown = {
+  header: "Comprehensive healthcare services with state-of-the-art facilities and expert medical professionals.",
   columns: [
     {
+      title: 'Cardiac & Surgical',
       items: [
-        { label: 'Catheterization Laboratory', href: '#' },
-        { label: 'Open-Heart Surgeries', href: '#' },
-        { label: 'Bypass Surgery', href: '#' },
-        { label: 'Endovascular Aneurysm Repair', href: '#' },
-        { label: 'MRI', href: '#' },
-        { label: 'Cancer Care Center', href: '#' },
-        { label: 'Chemotherapy', href: '#' },
-        { label: 'OR/DR', href: '#' },
-        { label: 'NICU', href: '#' }
+        { label: 'Catheterization Laboratory', href: '/services', description: 'Advanced cardiac diagnostics' },
+        { label: 'Open-Heart Surgeries', href: '/services', description: 'Complex cardiac procedures' },
+        { label: 'Bypass Surgery', href: '/services', description: 'Coronary artery treatment' },
+        { label: 'Cancer Care Center', href: '/services', description: 'Comprehensive oncology care' },
+        { label: 'OR/DR', href: '/services', description: 'Operating & delivery rooms' }
       ]
     },
     {
+      title: 'Emergency & Critical Care',
       items: [
-        { label: 'ICU', href: '#' },
-        { label: 'Outpatient Emergency Care', href: '#' },
-        { label: 'Urgent Care Center', href: '#' },
-        { label: 'Outpatient Services', href: '#' },
-        { label: 'Express Care Center', href: '#' },
-        { label: 'Satellite Clinic (Alabel)', href: '#' },
-        { label: 'Medical Arts Tower', href: '#' }
+        { label: 'ICU', href: '/services', description: 'Intensive care unit' },
+        { label: 'NICU', href: '/services', description: 'Neonatal intensive care' },
+        { label: 'Emergency Care', href: '/services', description: '24/7 emergency services' },
+        { label: 'Urgent Care Center', href: '/services', description: 'Immediate medical attention' },
+        { label: 'Outpatient Services', href: '/services', description: 'Same-day medical care' }
       ]
     },
     {
+      title: 'Diagnostics & Therapy',
       items: [
-        { label: 'Laboratory', href: '#' },
-        { label: 'Radiology / Imaging', href: '#' },
-        { label: 'Cardio-Pulmonary', href: '#' },
-        { label: 'Sleep Studies', href: '#' },
-        { label: 'Physical Therapy', href: '#' },
-        { label: 'Occupational Therapy', href: '#' },
-        { label: 'Speech Therapy', href: '#' },
-        { label: 'Educational Therapy', href: '#' }
+        { label: 'Laboratory', href: '/services', description: 'Clinical testing services' },
+        { label: 'Radiology / Imaging', href: '/services', description: 'X-ray, CT, MRI scans' },
+        { label: 'Cardio-Pulmonary', href: '/services', description: 'Heart & lung diagnostics' },
+        { label: 'Physical Therapy', href: '/services', description: 'Rehabilitation services' },
+        { label: 'Speech Therapy', href: '/services', description: 'Communication disorders' }
       ]
     },
     {
+      title: 'Specialty Services',
       items: [
-        { label: 'Dental Services', href: '#' },
-        { label: 'Hemodialysis', href: '#' },
-        { label: 'Nutrition & Dietetics', href: '#' }
+        { label: 'Dental Services', href: '/services', description: 'Oral health care' },
+        { label: 'Hemodialysis', href: '/services', description: 'Kidney treatment' },
+        { label: 'Nutrition & Dietetics', href: '/services', description: 'Dietary counseling' },
+        { label: 'Sleep Studies', href: '/services', description: 'Sleep disorder diagnosis' }
       ]
     }
-  ]
+  ],
+  footer: { label: 'View All Services', href: '/services' }
 };
 
 const doctorsDropdown = {
@@ -60,57 +59,66 @@ const doctorsDropdown = {
   columns: [
     {
       items: [
-        { label: 'Department of Cardiology', href: '#' },
-        { label: 'Orthopedics', href: '#' },
-        { label: 'Neurology', href: '#' },
-        { label: 'Gastroenterology', href: '#' },
-        { label: 'Oncology', href: '#' },
-        { label: 'Internal Medicine', href: '#' },
-        { label: 'Pediatrics', href: '#' }
+        { label: 'Cardiology', href: '/doctors?dept=Department of Cardiology', description: 'Heart & cardiovascular care' },
+        { label: 'Orthopedics', href: '/doctors?dept=Department of Orthopedics', description: 'Bone, joint & muscle treatment' },
+        { label: 'Neurology', href: '/doctors?dept=Department of Neurology', description: 'Brain & nervous system' },
+        { label: 'Gastroenterology', href: '/doctors?dept=Department of Gastroenterology', description: 'Digestive system disorders' },
+        { label: 'Oncology', href: '/doctors?dept=Department of Oncology', description: 'Cancer diagnosis & treatment' },
+        { label: 'Internal Medicine', href: '/doctors?dept=Department of Internal Medicine', description: 'Adult disease management' },
+        { label: 'Pediatrics', href: '/doctors?dept=Department of Pediatrics', description: 'Children\'s healthcare' }
       ]
     },
     {
       items: [
-        { label: 'Department of OB-GYN', href: '#' },
-        { label: 'Surgery', href: '#' },
-        { label: 'Anesthesiology', href: '#' },
-        { label: 'Family Medicine', href: '#' },
-        { label: 'Dental Medicine', href: '#' },
-        { label: 'Pathology', href: '#' },
-        { label: 'Radiology', href: '#' }
+        { label: 'OB-Gynecology', href: '/doctors?dept=Department of OB-GYN', description: 'Women\'s health & prenatal care' },
+        { label: 'Surgery', href: '/doctors?dept=Department of Surgery', description: 'Surgical procedures' },
+        { label: 'Anesthesiology', href: '/doctors?dept=Department of Anesthesiology', description: 'Pain management & sedation' },
+        { label: 'Family Medicine', href: '/doctors?dept=Department of Family Medicine', description: 'Comprehensive family care' },
+        { label: 'Dental Medicine', href: '/doctors?dept=Department of Dental Medicine', description: 'Oral health services' },
+        { label: 'Pathology', href: '/doctors?dept=Department of Pathology', description: 'Laboratory diagnosis' },
+        { label: 'Radiology', href: '/doctors?dept=Department of Radiology', description: 'Medical imaging services' }
       ]
     }
-  ]
+  ],
+  footer: { label: 'View All Doctors →', href: '/doctors' }
 };
 
 const aboutDropdown = {
   header: "Welcome to Socsargen County Hospital! Here, you're more than just a patient, you're family.",
   columns: [
     {
+      title: 'Our Story',
       items: [
-        { label: 'History & Milestones', href: '#' },
-        { label: 'Accreditations & Certifications', href: '#' },
-        { label: 'Mission & Vision Statements', href: '#' },
-        { label: 'Core Values', href: '#' }
+        { label: 'History & Milestones', href: '/about/history', description: 'Our journey since establishment' },
+        { label: 'Mission & Vision', href: '/about/mission', description: 'Our purpose and goals' },
+        { label: 'Core Values', href: '/about/values', description: 'Principles that guide us' }
       ]
     },
     {
+      title: 'Organization',
       items: [
-        { label: 'Leadership', href: '#' },
-        { label: 'Socsargen County Hospital', href: '#' }
+        { label: 'Leadership', href: '/about/leadership', description: 'Meet our executives' },
+        { label: 'Accreditations', href: '/about/accreditations', description: 'Certifications & awards' },
+        { label: 'Careers', href: '/careers', description: 'Join our team' }
       ]
     }
-  ]
+  ],
+  footer: { label: 'Learn More About Us', href: '/about' }
 };
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [mobileDropdown, setMobileDropdown] = useState(null);
+  const [loggingOut, setLoggingOut] = useState(false);
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    // Small delay for better UX feedback
+    await new Promise(resolve => setTimeout(resolve, 500));
     logout();
+    setLoggingOut(false);
     navigate('/');
   };
 
@@ -129,7 +137,7 @@ const Navbar = () => {
       <TopBar />
 
       {/* Main Navigation */}
-      <nav className="bg-white shadow-lg border-b border-gray-100">
+      <nav className="bg-white dark:bg-slate-900 shadow-lg border-b border-gray-100 dark:border-slate-700 transition-colors duration-200">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
@@ -140,19 +148,19 @@ const Navbar = () => {
               <img
                 src={logo}
                 alt="Socsargen County Hospital Logo"
-                className="h-12 w-12 object-contain"
+                className="h-10 w-10 sm:h-12 sm:w-12 object-contain"
               />
-              <div className="hidden sm:flex flex-col leading-tight">
-                <span className="text-sm font-bold text-primary-700 uppercase tracking-wide">
+              <div className="flex flex-col leading-tight">
+                <span className="text-xs sm:text-sm font-bold text-primary-700 uppercase tracking-wide">
                   SOCSARGEN COUNTY HOSPITAL
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="text-[10px] sm:text-xs text-gray-500">
                   General Santos City
                 </span>
               </div>
             </Link>
 
-            {/* Desktop Menu */}
+            {/* Desktop Menu + Login */}
             <div className="hidden lg:flex items-center space-x-1">
               {/* Home */}
               <Link
@@ -162,10 +170,20 @@ const Navbar = () => {
                 Home
               </Link>
 
+              {/* News */}
+              <Link
+                to="/news"
+                className="nav-link"
+              >
+                News
+              </Link>
+
               {/* Our Services Dropdown */}
               <DropdownMenu
                 label="Our Services"
                 columns={servicesDropdown.columns}
+                header={servicesDropdown.header}
+                footer={servicesDropdown.footer}
               />
 
               {/* Our Doctors Dropdown */}
@@ -173,6 +191,7 @@ const Navbar = () => {
                 label="Our Doctors"
                 columns={doctorsDropdown.columns}
                 header={doctorsDropdown.header}
+                footer={doctorsDropdown.footer}
               />
 
               {/* About Us Dropdown */}
@@ -180,6 +199,7 @@ const Navbar = () => {
                 label="About Us"
                 columns={aboutDropdown.columns}
                 header={aboutDropdown.header}
+                footer={aboutDropdown.footer}
               />
 
               {/* Contact Us */}
@@ -189,12 +209,13 @@ const Navbar = () => {
               >
                 Contact Us
               </Link>
-            </div>
 
-            {/* Right Side - Login/User */}
-            <div className="hidden lg:flex items-center space-x-4">
+              {/* Theme Toggle */}
+              <ThemeToggle />
+
+              {/* Login/User */}
               {user ? (
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2 ml-2">
                   <Link
                     to={getDashboardPath()}
                     className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
@@ -204,16 +225,21 @@ const Navbar = () => {
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-1 text-gray-600 hover:text-primary-600 transition p-2 rounded-lg hover:bg-gray-100"
+                    disabled={loggingOut}
+                    className="flex items-center gap-1 text-gray-600 hover:text-primary-600 transition p-2 rounded-lg hover:bg-gray-100 disabled:opacity-50"
                     aria-label="Logout"
                   >
-                    <FiLogOut className="w-5 h-5" />
+                    {loggingOut ? (
+                      <FiLoader className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <FiLogOut className="w-5 h-5" />
+                    )}
                   </button>
                 </div>
               ) : (
                 <Link
                   to="/login"
-                  className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
+                  className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition ml-2"
                   aria-label="Login"
                 >
                   <FiUser className="w-4 h-4" />
@@ -222,20 +248,23 @@ const Navbar = () => {
               )}
             </div>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="lg:hidden p-2 text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition"
-              onClick={() => setIsOpen(!isOpen)}
-              aria-label="Toggle menu"
-              aria-expanded={isOpen}
-            >
-              {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-            </button>
+            {/* Mobile: Theme Toggle + Menu Button */}
+            <div className="lg:hidden flex items-center gap-1">
+              <ThemeToggle />
+              <button
+                className="p-2 text-gray-700 hover:text-primary-600 hover:bg-gray-100 rounded-lg transition dark:text-slate-300 dark:hover:bg-slate-700"
+                onClick={() => setIsOpen(!isOpen)}
+                aria-label="Toggle menu"
+                aria-expanded={isOpen}
+              >
+                {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+              </button>
+            </div>
           </div>
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="lg:hidden pb-4 border-t border-gray-200 mt-2 pt-4">
+            <div className="lg:hidden pb-4 border-t border-gray-200 dark:border-slate-700 mt-2 pt-4">
               {/* Home */}
               <Link
                 to="/"
@@ -243,6 +272,15 @@ const Navbar = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Home
+              </Link>
+
+              {/* News */}
+              <Link
+                to="/news"
+                className="block py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium"
+                onClick={() => setIsOpen(false)}
+              >
+                News
               </Link>
 
               {/* Our Services - Mobile Accordion */}
@@ -260,12 +298,15 @@ const Navbar = () => {
                 </button>
                 {mobileDropdown === 'services' && (
                   <div className="pl-4 pb-3 space-y-1">
+                    <p className="text-xs text-gray-500 px-2 py-2 italic">
+                      {servicesDropdown.header}
+                    </p>
                     {servicesDropdown.columns.flatMap((col) =>
                       col.items.map((item) => (
                         <Link
                           key={`service-${item.label}`}
                           to={item.href}
-                          className="block py-2 px-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
+                          className="block py-3 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
                           onClick={() => setIsOpen(false)}
                         >
                           {item.label}
@@ -299,7 +340,7 @@ const Navbar = () => {
                         <Link
                           key={`doctor-${item.label}`}
                           to={item.href}
-                          className="block py-2 px-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
+                          className="block py-3 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
                           onClick={() => setIsOpen(false)}
                         >
                           {item.label}
@@ -333,7 +374,7 @@ const Navbar = () => {
                         <Link
                           key={`about-${item.label}`}
                           to={item.href}
-                          className="block py-2 px-2 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
+                          className="block py-3 px-3 text-sm text-gray-600 hover:text-primary-600 hover:bg-gray-50 rounded transition"
                           onClick={() => setIsOpen(false)}
                         >
                           {item.label}
@@ -370,10 +411,20 @@ const Navbar = () => {
                         handleLogout();
                         setIsOpen(false);
                       }}
-                      className="flex items-center gap-2 w-full py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium text-left"
+                      disabled={loggingOut}
+                      className="flex items-center gap-2 w-full py-3 px-2 text-gray-700 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition font-medium text-left disabled:opacity-50"
                     >
-                      <FiLogOut className="w-5 h-5" />
-                      Logout
+                      {loggingOut ? (
+                        <>
+                          <FiLoader className="w-5 h-5 animate-spin" />
+                          Logging out...
+                        </>
+                      ) : (
+                        <>
+                          <FiLogOut className="w-5 h-5" />
+                          Logout
+                        </>
+                      )}
                     </button>
                   </>
                 ) : (

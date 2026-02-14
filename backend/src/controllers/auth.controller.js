@@ -87,6 +87,14 @@ const login = async (req, res) => {
 
     const token = generateToken(user);
 
+    // Save session token for single-session enforcement (except admin)
+    if (user.role !== 'admin') {
+      await pool.query(
+        'UPDATE users SET session_token = $1 WHERE id = $2',
+        [token, user.id]
+      );
+    }
+
     res.json({
       message: 'Login successful!',
       user: {
@@ -99,8 +107,8 @@ const login = async (req, res) => {
       token
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Login failed. Please try again.' });
+    console.error('Login error:', error.message, error.stack);
+    res.status(500).json({ error: 'Login failed. Please try again.', details: process.env.NODE_ENV !== 'production' ? error.message : undefined });
   }
 };
 

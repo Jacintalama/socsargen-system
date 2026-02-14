@@ -3,12 +3,16 @@ const { getAIResponse, getFallbackResponse } = require('./gemini.service');
 
 /**
  * Save chat message to database
+ * For staff messages, sender format is "staff:StaffName" to preserve the name
  */
-const saveMessage = async (sessionId, userId, message, sender) => {
+const saveMessage = async (sessionId, userId, message, sender, staffName = null) => {
   try {
+    // If it's a staff message with a name, store as "staff:Name"
+    const senderValue = (sender === 'staff' && staffName) ? `staff:${staffName}` : sender;
+
     await pool.query(
       'INSERT INTO chat_messages (session_id, user_id, message, sender) VALUES ($1, $2, $3, $4)',
-      [sessionId, userId, message, sender]
+      [sessionId, userId, message, senderValue]
     );
   } catch (error) {
     console.error('Save message error:', error.message);
@@ -85,6 +89,7 @@ const getEscalatedChats = async () => {
 
 /**
  * Get chat history for a specific session (admin)
+ * Parses staff names from sender field (format: "staff:Name")
  */
 const getChatHistory = async (sessionId) => {
   try {
@@ -93,7 +98,22 @@ const getChatHistory = async (sessionId) => {
       [sessionId]
     );
 
-    return result.rows;
+    // Parse staff names from sender field
+    return result.rows.map(row => {
+      let sender = row.sender;
+      let staffName = null;
+
+      if (sender && sender.startsWith('staff:')) {
+        staffName = sender.substring(6); // Remove "staff:" prefix
+        sender = 'staff';
+      }
+
+      return {
+        ...row,
+        sender,
+        staff_name: staffName
+      };
+    });
   } catch (error) {
     console.error('Get chat history error:', error.message);
     return [];

@@ -11,53 +11,100 @@ INSERT INTO users (email, password, first_name, last_name, role) VALUES
 ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password;
 
 -- ===========================================
--- SAMPLE DOCTORS
--- Password: doctor123 (bcrypt hashed)
+-- TEST HR ACCOUNT
+-- Password: hr123 (bcrypt hashed)
 -- ===========================================
-INSERT INTO users (id, email, password, first_name, last_name, phone, role) VALUES
-('d1111111-1111-1111-1111-111111111111', 'dr.santos@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Maria', 'Santos', '09171234567', 'doctor'),
-('d2222222-2222-2222-2222-222222222222', 'dr.reyes@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Juan', 'Reyes', '09181234567', 'doctor'),
-('d3333333-3333-3333-3333-333333333333', 'dr.cruz@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Ana', 'Cruz', '09191234567', 'doctor'),
--- Additional doctors for all departments
-('d4444444-4444-4444-4444-444444444444', 'dr.garcia@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Carlos', 'Garcia', '09201234567', 'doctor'),
-('d5555555-5555-5555-5555-555555555555', 'dr.mendoza@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Elena', 'Mendoza', '09211234567', 'doctor'),
-('d6666666-6666-6666-6666-666666666666', 'dr.villanueva@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Roberto', 'Villanueva', '09221234567', 'doctor'),
-('d7777777-7777-7777-7777-777777777777', 'dr.torres@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Patricia', 'Torres', '09231234567', 'doctor'),
-('d8888888-8888-8888-8888-888888888888', 'dr.bautista@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Miguel', 'Bautista', '09241234567', 'doctor'),
-('d9999999-9999-9999-9999-999999999999', 'dr.fernandez@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Isabel', 'Fernandez', '09251234567', 'doctor'),
-('da111111-1111-1111-1111-111111111111', 'dr.ramos@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Antonio', 'Ramos', '09261234567', 'doctor'),
-('db222222-2222-2222-2222-222222222222', 'dr.castro@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Carmen', 'Castro', '09271234567', 'doctor'),
-('dc333333-3333-3333-3333-333333333333', 'dr.aquino@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'David', 'Aquino', '09281234567', 'doctor'),
-('dd444444-4444-4444-4444-444444444444', 'dr.navarro@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Rosa', 'Navarro', '09291234567', 'doctor'),
-('de555555-5555-5555-5555-555555555555', 'dr.ocampo@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Fernando', 'Ocampo', '09301234567', 'doctor'),
-('df666666-6666-6666-6666-666666666666', 'dr.delrosario@socsargen-hospital.com', '$2a$10$fkBsmMqFYjtlPAfSRTof/..1Bm84kNZ0koZoV4Ijh8tKFGebUZbKy', 'Lucia', 'Del Rosario', '09311234567', 'doctor')
+INSERT INTO users (email, password, first_name, last_name, phone, role) VALUES
+('hr@socsargen-hospital.com', '$2a$10$Ws0Wc7f8yDcbup92dAHnBeJhtbqtZhj79WM71HvE6sGp.7Op8wraO', 'Test', 'HR', '09171111111', 'hr')
 ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password;
 
--- Doctor profiles with departments (14 departments from official website)
-INSERT INTO doctors (user_id, specialization, department, license_number, bio, consultation_fee) VALUES
-('d1111111-1111-1111-1111-111111111111', 'Internal Medicine', 'Department of Internal Medicine', 'PRC-12345', 'Dr. Maria Santos is a board-certified internist with over 10 years of experience in diagnosing and treating adult diseases.', 500.00),
-('d2222222-2222-2222-2222-222222222222', 'Pediatrics', 'Department of Pediatrics', 'PRC-23456', 'Dr. Juan Reyes specializes in child healthcare and development, with expertise in childhood diseases and immunization.', 600.00),
-('d3333333-3333-3333-3333-333333333333', 'OB-Gynecology', 'Department of OB-GYN', 'PRC-34567', 'Dr. Ana Cruz is a dedicated OB-GYN specialist focused on womens health, prenatal care, and reproductive medicine.', 700.00),
-('d4444444-4444-4444-4444-444444444444', 'Cardiology', 'Department of Cardiology', 'PRC-45678', 'Dr. Carlos Garcia is a board-certified cardiologist specializing in heart disease diagnosis and treatment.', 800.00),
-('d5555555-5555-5555-5555-555555555555', 'Orthopedics', 'Department of Orthopedics', 'PRC-56789', 'Dr. Elena Mendoza specializes in bone and joint disorders, sports injuries, and orthopedic surgery.', 750.00),
-('d6666666-6666-6666-6666-666666666666', 'Neurology', 'Department of Neurology', 'PRC-67890', 'Dr. Roberto Villanueva is an expert in diagnosing and treating disorders of the nervous system.', 850.00),
-('d7777777-7777-7777-7777-777777777777', 'Gastroenterology', 'Department of Gastroenterology', 'PRC-78901', 'Dr. Patricia Torres specializes in digestive system disorders and gastrointestinal diseases.', 750.00),
-('d8888888-8888-8888-8888-888888888888', 'Oncology', 'Department of Oncology', 'PRC-89012', 'Dr. Miguel Bautista is dedicated to cancer diagnosis, treatment, and patient care.', 900.00),
-('d9999999-9999-9999-9999-999999999999', 'General Surgery', 'Department of Surgery', 'PRC-90123', 'Dr. Isabel Fernandez is an experienced general surgeon performing various surgical procedures.', 800.00),
-('da111111-1111-1111-1111-111111111111', 'Anesthesiology', 'Department of Anesthesiology', 'PRC-01234', 'Dr. Antonio Ramos specializes in anesthesia and perioperative medicine for surgical patients.', 700.00),
-('db222222-2222-2222-2222-222222222222', 'Family Medicine', 'Department of Family Medicine', 'PRC-11234', 'Dr. Carmen Castro provides comprehensive healthcare for patients of all ages as a family medicine specialist.', 500.00),
-('dc333333-3333-3333-3333-333333333333', 'Dental Medicine', 'Department of Dental Medicine', 'PRC-21234', 'Dr. David Aquino is a skilled dentist providing comprehensive dental care and oral health services.', 450.00),
-('dd444444-4444-4444-4444-444444444444', 'Pathology', 'Department of Pathology', 'PRC-31234', 'Dr. Rosa Navarro specializes in laboratory medicine and disease diagnosis through tissue analysis.', 650.00),
-('de555555-5555-5555-5555-555555555555', 'Radiology', 'Department of Radiology', 'PRC-41234', 'Dr. Fernando Ocampo is an expert in medical imaging and diagnostic radiology services.', 600.00),
-('df666666-6666-6666-6666-666666666666', 'Cardiology', 'Department of Cardiology', 'PRC-51234', 'Dr. Lucia Del Rosario specializes in interventional cardiology and heart disease prevention.', 850.00)
-ON CONFLICT DO NOTHING;
+-- ===========================================
+-- TEST DOCTOR ACCOUNTS (10 Doctors)
+-- Password: doctor123 (bcrypt hashed)
+-- ===========================================
 
--- Doctor schedules (Monday to Friday, 8AM to 5PM) for all doctors
+-- Clean up old test doctor data first (by known UUIDs and emails)
+DELETE FROM doctor_schedules WHERE doctor_id IN (SELECT id FROM doctors WHERE user_id IN (
+  'd1111111-1111-1111-1111-111111111111',
+  'd2222222-2222-2222-2222-222222222222',
+  'd3333333-3333-3333-3333-333333333333',
+  'd4444444-4444-4444-4444-444444444444',
+  'd5555555-5555-5555-5555-555555555555',
+  'd6666666-6666-6666-6666-666666666666',
+  'd7777777-7777-7777-7777-777777777777',
+  'd8888888-8888-8888-8888-888888888888',
+  'd9999999-9999-9999-9999-999999999999',
+  'da111111-1111-1111-1111-111111111111'
+));
+DELETE FROM doctors WHERE user_id IN (
+  'd1111111-1111-1111-1111-111111111111',
+  'd2222222-2222-2222-2222-222222222222',
+  'd3333333-3333-3333-3333-333333333333',
+  'd4444444-4444-4444-4444-444444444444',
+  'd5555555-5555-5555-5555-555555555555',
+  'd6666666-6666-6666-6666-666666666666',
+  'd7777777-7777-7777-7777-777777777777',
+  'd8888888-8888-8888-8888-888888888888',
+  'd9999999-9999-9999-9999-999999999999',
+  'da111111-1111-1111-1111-111111111111'
+);
+-- Also clean up any orphaned doctor records linked to test doctor emails
+DELETE FROM doctor_schedules WHERE doctor_id IN (
+  SELECT d.id FROM doctors d JOIN users u ON d.user_id = u.id
+  WHERE u.email LIKE 'doctor.%@socsargen-hospital.com'
+);
+DELETE FROM doctors WHERE user_id IN (
+  SELECT id FROM users WHERE email LIKE 'doctor.%@socsargen-hospital.com'
+);
+DELETE FROM users WHERE email LIKE 'doctor.%@socsargen-hospital.com';
+
+-- Insert doctor user accounts
+INSERT INTO users (id, email, password, first_name, last_name, phone, role) VALUES
+('d1111111-1111-1111-1111-111111111111', 'doctor.santos@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Maria', 'Santos', '09171000001', 'doctor'),
+('d2222222-2222-2222-2222-222222222222', 'doctor.reyes@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Juan', 'Reyes', '09171000002', 'doctor'),
+('d3333333-3333-3333-3333-333333333333', 'doctor.cruz@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Ana', 'Cruz', '09171000003', 'doctor'),
+('d4444444-4444-4444-4444-444444444444', 'doctor.garcia@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Carlos', 'Garcia', '09171000004', 'doctor'),
+('d5555555-5555-5555-5555-555555555555', 'doctor.mendoza@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Elena', 'Mendoza', '09171000005', 'doctor'),
+('d6666666-6666-6666-6666-666666666666', 'doctor.villanueva@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Roberto', 'Villanueva', '09171000006', 'doctor'),
+('d7777777-7777-7777-7777-777777777777', 'doctor.torres@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Patricia', 'Torres', '09171000007', 'doctor'),
+('d8888888-8888-8888-8888-888888888888', 'doctor.bautista@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Miguel', 'Bautista', '09171000008', 'doctor'),
+('d9999999-9999-9999-9999-999999999999', 'doctor.fernandez@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Isabel', 'Fernandez', '09171000009', 'doctor'),
+('da111111-1111-1111-1111-111111111111', 'doctor.ramos@socsargen-hospital.com', '$2a$10$Yb8LBpD7Go8Ca2DWuRaPh.g0B6U5l2jjPiM2WmEWGqpMM8.6o0RwW', 'Antonio', 'Ramos', '09171000010', 'doctor')
+ON CONFLICT (email) DO UPDATE SET
+  password = EXCLUDED.password,
+  first_name = EXCLUDED.first_name,
+  last_name = EXCLUDED.last_name,
+  phone = EXCLUDED.phone,
+  role = EXCLUDED.role,
+  is_active = true;
+
+-- Doctor profiles (10 different departments)
+INSERT INTO doctors (user_id, specialization, department, license_number, bio, consultation_fee, is_available) VALUES
+('d1111111-1111-1111-1111-111111111111', 'Internal Medicine', 'Department of Internal Medicine', 'PRC-00001', 'Board-certified internist specializing in adult diseases and preventive care.', 500.00, true),
+('d2222222-2222-2222-2222-222222222222', 'Pediatrics', 'Department of Pediatrics', 'PRC-00002', 'Child healthcare specialist with expertise in childhood diseases and immunization.', 600.00, true),
+('d3333333-3333-3333-3333-333333333333', 'OB-Gynecology', 'Department of OB-GYN', 'PRC-00003', 'OB-GYN specialist focused on womens health, prenatal care, and reproductive medicine.', 700.00, true),
+('d4444444-4444-4444-4444-444444444444', 'Cardiology', 'Department of Cardiology', 'PRC-00004', 'Board-certified cardiologist specializing in heart disease diagnosis and treatment.', 800.00, true),
+('d5555555-5555-5555-5555-555555555555', 'Orthopedics', 'Department of Orthopedics', 'PRC-00005', 'Specialist in bone and joint disorders, sports injuries, and orthopedic surgery.', 750.00, true),
+('d6666666-6666-6666-6666-666666666666', 'General Surgery', 'Department of Surgery', 'PRC-00006', 'Experienced general surgeon performing various surgical procedures.', 800.00, true),
+('d7777777-7777-7777-7777-777777777777', 'Neurology', 'Department of Neurology', 'PRC-00007', 'Expert in diagnosing and treating disorders of the nervous system.', 850.00, true),
+('d8888888-8888-8888-8888-888888888888', 'Dermatology', 'Department of Dermatology', 'PRC-00008', 'Specialist in skin conditions, cosmetic dermatology, and skin cancer screening.', 650.00, true),
+('d9999999-9999-9999-9999-999999999999', 'Ophthalmology', 'Department of Ophthalmology', 'PRC-00009', 'Eye care specialist for vision correction, cataract surgery, and eye disease treatment.', 700.00, true),
+('da111111-1111-1111-1111-111111111111', 'Dental Medicine', 'Department of Dental Medicine', 'PRC-00010', 'Comprehensive dental care including preventive, restorative, and cosmetic dentistry.', 450.00, true);
+
+-- Doctor schedules (Monday to Friday, 8AM to 5PM)
 INSERT INTO doctor_schedules (doctor_id, day_of_week, start_time, end_time, max_patients)
 SELECT d.id, day_num, '08:00:00', '17:00:00', 20
 FROM doctors d
 CROSS JOIN generate_series(1, 5) as day_num
 ON CONFLICT DO NOTHING;
+
+-- ===========================================
+-- TEST PATIENT ACCOUNT
+-- Password: patient123 (bcrypt hashed)
+-- ===========================================
+INSERT INTO users (email, password, first_name, last_name, phone, role) VALUES
+('patient@socsargen-hospital.com', '$2a$10$jEMvIxklWvJds6LNo7agSO9KXCISU3Vo6HbnZIwQmhgcqnpLXHSxC', 'Test', 'Patient', '09174444444', 'patient')
+ON CONFLICT (email) DO UPDATE SET password = EXCLUDED.password;
 
 -- ===========================================
 -- HOSPITAL SERVICES (31 Services from Official Website)

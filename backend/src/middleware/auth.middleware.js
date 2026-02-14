@@ -14,7 +14,7 @@ const authenticate = async (req, res, next) => {
     const decoded = verifyToken(token);
 
     const result = await pool.query(
-      'SELECT id, email, first_name, last_name, role FROM users WHERE id = $1 AND is_active = true',
+      'SELECT id, email, first_name, last_name, role, session_token FROM users WHERE id = $1 AND is_active = true',
       [decoded.id]
     );
 
@@ -22,7 +22,18 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({ error: 'User not found or inactive.' });
     }
 
-    req.user = result.rows[0];
+    const user = result.rows[0];
+
+    // Single session enforcement (except admin)
+    // If user's stored session_token doesn't match current token, they've been logged out
+    if (user.role !== 'admin' && user.session_token && user.session_token !== token) {
+      return res.status(401).json({
+        error: 'Session expired. You have been logged in from another device.',
+        code: 'SESSION_REPLACED'
+      });
+    }
+
+    req.user = user;
     next();
   } catch (error) {
     console.error('Auth middleware error:', error.message);

@@ -13,7 +13,7 @@ const Footer = () => {
     { name: 'Home', to: '/' },
     { name: 'Our Services', to: '/services' },
     { name: 'Our Doctors', to: '/doctors' },
-    { name: 'Careers', to: '#' },
+    { name: 'Careers', to: '/careers' },
     { name: 'Contact Us', to: '/contact' },
   ];
 
@@ -63,7 +63,7 @@ const Footer = () => {
               </h3>
             </div>
             <p className="text-primary-200 text-sm">
-              Providing quality healthcare services to the Socsargen region with compassion and excellence.
+              "Leading with Innovation, Serving with Compassion"
             </p>
             <p className="text-primary-300 text-sm mt-4">
               &copy; {currentYear} Socsargen County Hospital

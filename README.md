@@ -198,14 +198,28 @@ http://localhost:5173
 
 ## Login Credentials (Test Accounts)
 
+### Admin & HR & Patient
+
 | Role | Email | Password |
 |------|-------|----------|
 | Admin | admin@socsargen-hospital.com | admin123 |
-| Doctor | dr.santos@socsargen-hospital.com | doctor123 |
-| Doctor | dr.reyes@socsargen-hospital.com | doctor123 |
-| Doctor | dr.cruz@socsargen-hospital.com | doctor123 |
+| HR | hr@socsargen-hospital.com | hr123 |
+| Patient | patient@socsargen-hospital.com | patient123 |
 
-Para mag-register as Patient, click lang ang "Register" sa login page.
+### Doctors (All passwords: `doctor123`)
+
+| Name | Email | Department |
+|------|-------|------------|
+| Dr. Maria Santos | doctor.santos@socsargen-hospital.com | Internal Medicine |
+| Dr. Juan Reyes | doctor.reyes@socsargen-hospital.com | Pediatrics |
+| Dr. Ana Cruz | doctor.cruz@socsargen-hospital.com | OB-GYN |
+| Dr. Carlos Garcia | doctor.garcia@socsargen-hospital.com | Cardiology |
+| Dr. Elena Mendoza | doctor.mendoza@socsargen-hospital.com | Orthopedics |
+| Dr. Roberto Villanueva | doctor.villanueva@socsargen-hospital.com | Surgery |
+| Dr. Patricia Torres | doctor.torres@socsargen-hospital.com | Neurology |
+| Dr. Miguel Bautista | doctor.bautista@socsargen-hospital.com | Dermatology |
+| Dr. Isabel Fernandez | doctor.fernandez@socsargen-hospital.com | Ophthalmology |
+| Dr. Antonio Ramos | doctor.ramos@socsargen-hospital.com | Dental Medicine |
 
 ---
 

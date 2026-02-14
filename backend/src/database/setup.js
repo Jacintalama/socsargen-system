@@ -3,10 +3,10 @@
  * Run with: npm run db:setup
  */
 
-require('dotenv').config({ path: '../../.env' });
+const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 const { Pool } = require('pg');
 const fs = require('fs');
-const path = require('path');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://postgres:@localhost:5432/socsargen_hospital'
@@ -45,13 +45,23 @@ async function setupDatabase() {
     console.log('  DATABASE SETUP COMPLETE!');
     console.log('===========================================');
     console.log('');
-    console.log('  Default Admin Login:');
-    console.log('  Email: admin@socsargen-hospital.com');
-    console.log('  Password: admin123');
+    console.log('  Test Accounts:');
     console.log('');
-    console.log('  Sample Doctor Logins:');
-    console.log('  Email: dr.santos@socsargen-hospital.com');
-    console.log('  Password: doctor123');
+    console.log('  Admin:   admin@socsargen-hospital.com          / admin123');
+    console.log('  HR:      hr@socsargen-hospital.com             / hr123');
+    console.log('  Patient: patient@socsargen-hospital.com        / patient123');
+    console.log('');
+    console.log('  Doctors (all password: doctor123):');
+    console.log('  doctor.santos@socsargen-hospital.com     - Internal Medicine');
+    console.log('  doctor.reyes@socsargen-hospital.com      - Pediatrics');
+    console.log('  doctor.cruz@socsargen-hospital.com       - OB-GYN');
+    console.log('  doctor.garcia@socsargen-hospital.com     - Cardiology');
+    console.log('  doctor.mendoza@socsargen-hospital.com    - Orthopedics');
+    console.log('  doctor.villanueva@socsargen-hospital.com - Surgery');
+    console.log('  doctor.torres@socsargen-hospital.com     - Neurology');
+    console.log('  doctor.bautista@socsargen-hospital.com   - Dermatology');
+    console.log('  doctor.fernandez@socsargen-hospital.com  - Ophthalmology');
+    console.log('  doctor.ramos@socsargen-hospital.com      - Dental Medicine');
     console.log('');
     console.log('===========================================');
 

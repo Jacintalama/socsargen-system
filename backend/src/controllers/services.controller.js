@@ -8,6 +8,7 @@ const formatService = (row) => ({
   description: row.description,
   category: row.category,
   icon: row.icon,
+  imageUrl: row.image_url,
   isFeatured: row.is_featured,
   displayOrder: row.display_order
 });
@@ -19,6 +20,22 @@ const formatError = (message, error) => {
     response.details = error.message;
   }
   return response;
+};
+
+// Get service categories (public)
+const getCategories = async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT DISTINCT category FROM services
+      WHERE is_active = true AND category IS NOT NULL
+      ORDER BY category
+    `);
+
+    res.json(result.rows.map(r => r.category));
+  } catch (error) {
+    console.error('Get categories error:', error);
+    res.status(500).json(formatError('Failed to fetch categories.', error));
+  }
 };
 
 // Get all active services (public)
@@ -88,16 +105,16 @@ const createService = async (req, res) => {
       return res.status(400).json({ error: 'Validation failed', details: errors.array() });
     }
 
-    const { name, description, category, icon, isFeatured, displayOrder } = req.body;
+    const { name, description, category, icon, imageUrl, isFeatured, displayOrder } = req.body;
 
     const result = await pool.query(
-      'INSERT INTO services (name, description, category, icon, is_featured, display_order) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-      [name, description, category || 'General', icon, isFeatured || false, displayOrder || 0]
+      'INSERT INTO services (name, description, category, icon, image_url, is_featured, display_order) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [name, description, category || 'General', icon, imageUrl || null, isFeatured || false, displayOrder || 0]
     );
 
     res.status(201).json({
       message: 'Service created successfully!',
-      service: result.rows[0]
+      service: formatService(result.rows[0])
     });
   } catch (error) {
     console.error('Create service error:', error);
@@ -115,7 +132,7 @@ const updateService = async (req, res) => {
     }
 
     const { id } = req.params;
-    const { name, description, category, icon, isFeatured, displayOrder, isActive } = req.body;
+    const { name, description, category, icon, imageUrl, isFeatured, displayOrder, isActive } = req.body;
 
     const result = await pool.query(`
       UPDATE services SET
@@ -123,13 +140,14 @@ const updateService = async (req, res) => {
         description = COALESCE($2, description),
         category = COALESCE($3, category),
         icon = COALESCE($4, icon),
-        is_featured = COALESCE($5, is_featured),
-        display_order = COALESCE($6, display_order),
-        is_active = COALESCE($7, is_active),
+        image_url = COALESCE($5, image_url),
+        is_featured = COALESCE($6, is_featured),
+        display_order = COALESCE($7, display_order),
+        is_active = COALESCE($8, is_active),
         updated_at = CURRENT_TIMESTAMP
-      WHERE id = $8
+      WHERE id = $9
       RETURNING *
-    `, [name, description, category, icon, isFeatured, displayOrder, isActive, id]);
+    `, [name, description, category, icon, imageUrl, isFeatured, displayOrder, isActive, id]);
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Service not found.' });
@@ -137,7 +155,7 @@ const updateService = async (req, res) => {
 
     res.json({
       message: 'Service updated successfully!',
-      service: result.rows[0]
+      service: formatService(result.rows[0])
     });
   } catch (error) {
     console.error('Update service error:', error);
@@ -170,6 +188,7 @@ const deleteService = async (req, res) => {
 };
 
 module.exports = {
+  getCategories,
   getAllServices,
   getFeaturedServices,
   getServicesByCategory,

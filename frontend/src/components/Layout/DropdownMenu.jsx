@@ -10,6 +10,7 @@ const DropdownMenu = ({
   label,
   columns = [],
   header = null,
+  footer = null,
   className = ''
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,14 +25,10 @@ const DropdownMenu = ({
   };
 
   const handleMouseLeave = () => {
-    // Clear any existing timeout before setting a new one
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
-    timeoutRef.current = setTimeout(() => {
-      setIsOpen(false);
-      timeoutRef.current = null;
-    }, 150);
+    setIsOpen(false);
   };
 
   const handleKeyDown = (e) => {
@@ -86,24 +83,24 @@ const DropdownMenu = ({
       {/* Dropdown Panel */}
       {isOpen && (
         <div
-          className="absolute top-full left-0 mt-1 bg-white rounded-lg shadow-xl border border-gray-200 z-50 min-w-max"
+          className="absolute top-full left-1/2 -translate-x-1/2 mt-1 bg-white dark:bg-slate-800 rounded-lg shadow-xl border border-gray-200 dark:border-slate-700 z-50 min-w-max"
           role="menu"
           aria-orientation="vertical"
         >
           {/* Header if provided */}
           {header && (
-            <div className="px-6 py-4 bg-primary-50 border-b border-gray-200 max-w-xl">
-              <p className="text-sm text-gray-600 leading-relaxed">{header}</p>
+            <div className="px-4 py-3 bg-primary-50 dark:bg-primary-900/20 border-b border-gray-200 dark:border-slate-700 rounded-t-lg">
+              <p className="text-sm text-gray-600 dark:text-slate-300 leading-relaxed max-w-md">{header}</p>
             </div>
           )}
 
           {/* Columns Grid */}
-          <div className={`grid ${gridClass} gap-6 p-6`}>
+          <div className={`grid ${gridClass} p-4 gap-4`}>
             {columns.map((column, colIndex) => (
               <div key={colIndex} className="min-w-[180px]">
                 {/* Column Title if provided */}
                 {column.title && (
-                  <h3 className="font-semibold text-gray-900 mb-3 text-sm uppercase tracking-wide">
+                  <h3 className="font-semibold text-gray-900 dark:text-slate-100 mb-2 text-sm uppercase tracking-wide">
                     {column.title}
                   </h3>
                 )}
@@ -112,12 +109,19 @@ const DropdownMenu = ({
                   {column.items.map((item) => (
                     <li key={item.label}>
                       <Link
-                        to="#"
-                        className="block text-sm text-gray-600 hover:text-primary-600 px-2 py-1.5 transition-colors relative after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:bg-primary-600 after:scale-x-0 hover:after:scale-x-100 after:transition-transform after:origin-left"
+                        to={item.href || '#'}
+                        className="block px-3 py-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
                         role="menuitem"
                         onClick={() => setIsOpen(false)}
                       >
-                        {item.label}
+                        <span className="block text-sm font-medium text-gray-800 dark:text-slate-200 group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                          {item.label}
+                        </span>
+                        {item.description && (
+                          <span className="block text-xs text-gray-500 dark:text-slate-400 mt-0.5">
+                            {item.description}
+                          </span>
+                        )}
                       </Link>
                     </li>
                   ))}
@@ -125,6 +129,19 @@ const DropdownMenu = ({
               </div>
             ))}
           </div>
+
+          {/* Footer if provided */}
+          {footer && (
+            <div className="px-4 py-3 bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-700 rounded-b-lg">
+              <Link
+                to={footer.href || '#'}
+                className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {footer.label}
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </div>

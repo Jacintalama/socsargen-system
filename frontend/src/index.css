@@ -1,7 +1,8 @@
 @import "tailwindcss";
-
-/* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Tailwind v4 dark mode via .dark class */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Custom theme variables - GREEN, YELLOW & RED THEME (based on hospital logo) */
 /* Green = Dominant/Primary | Yellow = Accent | Red = Secondary Accent */
@@ -47,7 +48,29 @@
   --color-hospital-yellow: #eab308;
   --color-hospital-red: #dc2626;
 
+  /* Semantic Dark Mode Colors */
+  --color-surface-primary: #ffffff;
+  --color-surface-secondary: #f9fafb;
+  --color-surface-tertiary: #f3f4f6;
+  --color-text-primary: #111827;
+  --color-text-secondary: #4b5563;
+  --color-text-tertiary: #6b7280;
+  --color-border-primary: #e5e7eb;
+  --color-border-secondary: #f3f4f6;
+
   --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+/* Dark mode semantic overrides */
+.dark {
+  --color-surface-primary: #1e293b;
+  --color-surface-secondary: #0f172a;
+  --color-surface-tertiary: #334155;
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #cbd5e1;
+  --color-text-tertiary: #94a3b8;
+  --color-border-primary: #334155;
+  --color-border-secondary: #1e293b;
 }
 
 /* Accessibility: Focus states */
@@ -77,6 +100,9 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   margin: 0;
+  background-color: var(--color-surface-secondary);
+  color: var(--color-text-primary);
+  transition: background-color 0.2s, color 0.2s;
 }
 
 /* Navigation link styles - underline hover effect */
@@ -121,6 +147,14 @@ body {
   transform: scaleX(1);
 }
 
+.dark .nav-link {
+  color: #cbd5e1;
+}
+
+.dark .nav-link:hover {
+  color: var(--color-primary-400);
+}
+
 /* Button base styles */
 .btn {
   padding: 0.5rem 1rem;
@@ -146,6 +180,15 @@ body {
 
 .btn-secondary:hover {
   background-color: #d1d5db;
+}
+
+.dark .btn-secondary {
+  background-color: #334155;
+  color: #f1f5f9;
+}
+
+.dark .btn-secondary:hover {
+  background-color: #475569;
 }
 
 .btn-outline {
@@ -174,6 +217,9 @@ body {
   padding: 0.5rem 1rem;
   border: 1px solid #d1d5db;
   border-radius: 0.5rem;
+  background-color: var(--color-surface-primary);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s, background-color 0.2s, color 0.2s;
 }
 
 .input:focus {
@@ -181,12 +227,21 @@ body {
   box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
 }
 
+.dark .input {
+  border-color: #475569;
+}
+
 /* Card styles */
 .card {
-  background: white;
+  background: var(--color-surface-primary);
   border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
+  transition: background-color 0.2s;
+}
+
+.dark .card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* Status badges */
@@ -222,6 +277,31 @@ body {
   color: #374151;
 }
 
+.dark .badge-pending {
+  background-color: #78350f;
+  color: #fef3c7;
+}
+
+.dark .badge-approved {
+  background-color: #064e3b;
+  color: #d1fae5;
+}
+
+.dark .badge-rejected {
+  background-color: #7f1d1d;
+  color: #fee2e2;
+}
+
+.dark .badge-completed {
+  background-color: #1e3a5f;
+  color: #dbeafe;
+}
+
+.dark .badge-cancelled {
+  background-color: #334155;
+  color: #cbd5e1;
+}
+
 /* Skip link for accessibility */
 .skip-link {
   position: absolute;
@@ -236,4 +316,179 @@ body {
   background-color: var(--color-primary-600);
   color: white;
   padding: 1rem;
+}
+
+/* Hide scrollbar for horizontal scroll filters */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ============================================
+   GLOBAL DARK MODE OVERRIDES
+   Handles hardcoded Tailwind classes across 40+ files
+   ============================================ */
+
+/* Background overrides */
+.dark .bg-white {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-gray-50 {
+  background-color: #0f172a !important;
+}
+
+.dark .bg-gray-100 {
+  background-color: #1e293b !important;
+}
+
+.dark .bg-gray-200 {
+  background-color: #334155 !important;
+}
+
+/* Text overrides */
+.dark .text-gray-900 {
+  color: #f1f5f9 !important;
+}
+
+.dark .text-gray-800 {
+  color: #e2e8f0 !important;
+}
+
+.dark .text-gray-700 {
+  color: #cbd5e1 !important;
+}
+
+.dark .text-gray-600 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-gray-500 {
+  color: #94a3b8 !important;
+}
+
+.dark .text-gray-400 {
+  color: #64748b !important;
+}
+
+.dark .text-gray-300 {
+  color: #475569 !important;
+}
+
+/* Border overrides */
+.dark .border-gray-100 {
+  border-color: #1e293b !important;
+}
+
+.dark .border-gray-200 {
+  border-color: #334155 !important;
+}
+
+.dark .border-gray-300 {
+  border-color: #475569 !important;
+}
+
+/* Form element overrides */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: #0f172a;
+  color: #f1f5f9;
+  border-color: #475569;
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #64748b;
+}
+
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus {
+  border-color: var(--color-primary-500);
+}
+
+/* Table overrides */
+.dark table {
+  color: #f1f5f9;
+}
+
+.dark thead {
+  background-color: #1e293b;
+}
+
+.dark th {
+  color: #cbd5e1;
+  border-color: #334155;
+}
+
+.dark td {
+  border-color: #1e293b;
+}
+
+.dark tbody tr:hover {
+  background-color: #334155;
+}
+
+.dark tbody tr:nth-child(even) {
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+/* Hover state overrides */
+.dark .hover\:bg-gray-50:hover {
+  background-color: #334155 !important;
+}
+
+.dark .hover\:bg-gray-100:hover {
+  background-color: #334155 !important;
+}
+
+/* Ring / shadow overrides */
+.dark .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .shadow-xl {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Divide overrides */
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #334155 !important;
+}
+
+/* Background color overrides for specific UI patterns */
+.dark .bg-primary-50 {
+  background-color: rgba(22, 163, 74, 0.1) !important;
+}
+
+.dark .bg-primary-100 {
+  background-color: rgba(22, 163, 74, 0.15) !important;
+}
+
+.dark .text-primary-700 {
+  color: #4ade80 !important;
+}
+
+.dark .text-primary-600 {
+  color: #22c55e !important;
+}
+
+/* Modal / Dialog overrides */
+.dark .bg-black\/50,
+.dark .bg-black\/40 {
+  background-color: rgba(0, 0, 0, 0.7) !important;
+}
+
+/* Ring color overrides */
+.dark .ring-gray-200 {
+  --tw-ring-color: #334155 !important;
+}
+
+.dark .ring-gray-300 {
+  --tw-ring-color: #475569 !important;
 }

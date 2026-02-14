@@ -22,12 +22,14 @@ const newsValidation = [
 
 // Public routes
 router.get('/', getPublishedNews);
-router.get('/:slug', getNewsBySlug);
 
-// Admin routes
+// Admin routes (must be before /:slug to avoid conflicts)
 router.get('/admin/all', authenticate, authorize('admin'), getAllNews);
 router.post('/', authenticate, authorize('admin'), newsValidation, createNews);
 router.put('/:id', authenticate, authorize('admin'), updateNews);
 router.delete('/:id', authenticate, authorize('admin'), deleteNews);
+
+// Dynamic slug route (must be last)
+router.get('/:slug', getNewsBySlug);
 
 module.exports = router;

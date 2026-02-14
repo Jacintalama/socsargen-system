@@ -6,7 +6,7 @@ const getPublishedNews = async (req, res) => {
     const { limit = 10, offset = 0 } = req.query;
 
     const result = await pool.query(`
-      SELECT n.id, n.title, n.slug, n.excerpt, n.image_url, n.published_at,
+      SELECT n.id, n.title, n.slug, n.excerpt, n.image_url, n.video_url, n.published_at,
              u.first_name as author_first_name, u.last_name as author_last_name
       FROM news n
       LEFT JOIN users u ON n.author_id = u.id
@@ -27,6 +27,7 @@ const getPublishedNews = async (req, res) => {
         slug: n.slug,
         excerpt: n.excerpt,
         imageUrl: n.image_url,
+        videoUrl: n.video_url,
         publishedAt: n.published_at,
         author: n.author_first_name ? `${n.author_first_name} ${n.author_last_name}` : 'Admin'
       })),
@@ -64,6 +65,7 @@ const getNewsBySlug = async (req, res) => {
       content: n.content,
       excerpt: n.excerpt,
       imageUrl: n.image_url,
+      videoUrl: n.video_url,
       publishedAt: n.published_at,
       author: n.author_first_name ? `${n.author_first_name} ${n.author_last_name}` : 'Admin'
     });
@@ -89,6 +91,7 @@ const getAllNews = async (req, res) => {
       slug: n.slug,
       excerpt: n.excerpt,
       imageUrl: n.image_url,
+      videoUrl: n.video_url,
       isPublished: n.is_published,
       publishedAt: n.published_at,
       createdAt: n.created_at,
@@ -103,7 +106,7 @@ const getAllNews = async (req, res) => {
 // Admin: Create news
 const createNews = async (req, res) => {
   try {
-    const { title, content, excerpt, imageUrl, isPublished } = req.body;
+    const { title, content, excerpt, imageUrl, videoUrl, isPublished } = req.body;
     const authorId = req.user.id;
 
     // Generate slug
@@ -112,8 +115,8 @@ const createNews = async (req, res) => {
       .replace(/(^-|-$)/g, '') + '-' + Date.now();
 
     const result = await pool.query(`
-      INSERT INTO news (title, slug, content, excerpt, image_url, author_id, is_published, published_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      INSERT INTO news (title, slug, content, excerpt, image_url, video_url, author_id, is_published, published_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
       RETURNING *
     `, [
       title,
@@ -121,6 +124,7 @@ const createNews = async (req, res) => {
       content,
       excerpt || content.substring(0, 200) + '...',
       imageUrl,
+      videoUrl || null,
       authorId,
       isPublished || false,
       isPublished ? new Date() : null
@@ -140,7 +144,7 @@ const createNews = async (req, res) => {
 const updateNews = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content, excerpt, imageUrl, isPublished } = req.body;
+    const { title, content, excerpt, imageUrl, videoUrl, isPublished } = req.body;
 
     // Check if publishing for first time
     const existing = await pool.query('SELECT is_published, published_at FROM news WHERE id = $1', [id]);
@@ -151,18 +155,20 @@ const updateNews = async (req, res) => {
     const wasPublished = existing.rows[0].is_published;
     const publishedAt = isPublished && !wasPublished ? new Date() : existing.rows[0].published_at;
 
+    // video_url uses direct assignment (not COALESCE) so it can be cleared
     const result = await pool.query(`
       UPDATE news SET
         title = COALESCE($1, title),
         content = COALESCE($2, content),
         excerpt = COALESCE($3, excerpt),
         image_url = COALESCE($4, image_url),
-        is_published = COALESCE($5, is_published),
-        published_at = $6,
+        video_url = CASE WHEN $5::text IS NOT NULL THEN NULLIF($5, '') ELSE video_url END,
+        is_published = COALESCE($6, is_published),
+        published_at = $7,
         updated_at = CURRENT_TIMESTAMP
-      WHERE id = $7
+      WHERE id = $8
       RETURNING *
-    `, [title, content, excerpt, imageUrl, isPublished, publishedAt, id]);
+    `, [title, content, excerpt, imageUrl, videoUrl !== undefined ? (videoUrl || '') : null, isPublished, publishedAt, id]);
 
     res.json({
       message: 'Article updated successfully!',

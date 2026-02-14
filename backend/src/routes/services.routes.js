@@ -3,6 +3,7 @@ const { body, param } = require('express-validator');
 const router = express.Router();
 const { authenticate, authorize } = require('../middleware/auth.middleware');
 const {
+  getCategories,
   getAllServices,
   getFeaturedServices,
   getServicesByCategory,
@@ -27,6 +28,7 @@ const uuidValidation = [
 
 // Public routes
 router.get('/', getAllServices);
+router.get('/categories', getCategories);
 router.get('/featured', getFeaturedServices);
 router.get('/category/:category', getServicesByCategory);
 
