@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 const http = require('http');
 const { Server } = require('socket.io');
 
@@ -27,14 +28,25 @@ const { handleChatMessage, saveMessage } = require('./services/chat.service');
 const app = express();
 const server = http.createServer(app);
 
+// CORS - Whitelist allowed origins
+const allowedOrigins = (process.env.CORS_ORIGINS || 'http://localhost:5173,http://localhost:5174')
+  .split(',')
+  .map(s => s.trim());
+
+const corsOriginCheck = (origin, callback) => {
+  if (!origin) return callback(null, true); // Allow no-origin (mobile, curl, Postman)
+  if (allowedOrigins.includes(origin)) return callback(null, true);
+  // Allow LAN IPs in development
+  if (process.env.NODE_ENV !== 'production' && origin.match(/^https?:\/\/(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+)(:\d+)?$/)) {
+    return callback(null, true);
+  }
+  return callback(new Error('Not allowed by CORS'));
+};
+
 // Initialize Socket.io
 const io = new Server(server, {
   cors: {
-    origin: function (origin, callback) {
-      // Allow requests with no origin (mobile apps, curl, etc.)
-      // Allow localhost and LAN IPs for development
-      callback(null, true);
-    },
+    origin: corsOriginCheck,
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -50,7 +62,7 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://connect.facebook.net"],
+      scriptSrc: ["'self'", "'unsafe-inline'", "https://connect.facebook.net"],
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "blob:", "https:", "http:"],
@@ -60,15 +72,14 @@ app.use(helmet({
   }
 }));
 
-// CORS - Allow LAN access for development
+// CORS - Whitelist allowed origins
 app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    // Allow all origins for LAN development
-    callback(null, true);
-  },
+  origin: corsOriginCheck,
   credentials: true
 }));
+
+// Cookie parser (for refresh token HttpOnly cookies)
+app.use(cookieParser());
 
 // Request logging
 if (process.env.NODE_ENV !== 'production') {
@@ -78,6 +89,10 @@ if (process.env.NODE_ENV !== 'production') {
 // Parse JSON bodies
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+// API rate limiting
+const { apiLimiter } = require('./middleware/rateLimiter.middleware');
+app.use('/api/', apiLimiter);
 
 // Serve static files from uploads directory
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));

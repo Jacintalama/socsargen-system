@@ -224,8 +224,8 @@ const createDoctor = async (req, res) => {
   try {
     const { email, password, firstName, lastName, phone, specialization, department, licenseNumber, bio, consultationFee, photoUrl } = req.body;
 
-    const bcrypt = require('bcryptjs');
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const { hashPassword } = require('../utils/password.utils');
+    const hashedPassword = await hashPassword(password);
 
     // Create user first
     const userResult = await pool.query(

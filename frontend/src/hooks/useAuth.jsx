@@ -40,7 +40,13 @@ export const AuthProvider = ({ children }) => {
     return userData;
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      // Call server to revoke refresh tokens and clear session
+      await api.post('/auth/logout');
+    } catch (err) {
+      // Logout locally even if server call fails
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);

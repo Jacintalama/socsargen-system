@@ -1,5 +1,5 @@
 const pool = require('../config/database');
-const bcrypt = require('bcryptjs');
+const { hashPassword } = require('../utils/password.utils');
 
 // Admin: Get all users (with optional role filter)
 const getAllUsers = async (req, res) => {
@@ -58,9 +58,8 @@ const createHRAccount = async (req, res) => {
       return res.status(400).json({ error: 'Email already registered.' });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    // Hash password with Argon2id
+    const hashedPassword = await hashPassword(password);
 
     // Create HR user
     const result = await pool.query(`
