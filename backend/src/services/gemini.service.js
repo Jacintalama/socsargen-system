@@ -10,6 +10,9 @@ const { validateInput, validateOutput } = require('./guardrails');
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
+// Model fallback chain - if primary model quota is exhausted, try the next
+const MODEL_CHAIN = ['gemini-2.0-flash', 'gemini-2.0-flash-lite'];
+
 // ============================================
 // FUNCTION DECLARATIONS (Gemini Tool Schema)
 // ============================================
@@ -137,99 +140,122 @@ function determineSuggestions(functionCallsUsed) {
 // MAIN: Get AI response with function calling
 // ============================================
 const getAIResponse = async (message, conversationHistory = []) => {
-  try {
-    // Layer 1: Input guardrails
-    const inputCheck = validateInput(message);
-    if (inputCheck.blocked) {
-      return { message: inputCheck.response, escalate: false, suggestions: ['Find a Doctor', 'Our Services', 'Contact Info'] };
-    }
-    const cleanMessage = inputCheck.truncated || message;
-
-    if (!process.env.GEMINI_API_KEY) {
-      return getFallbackResponse(cleanMessage);
-    }
-
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
-      tools: [{ functionDeclarations }],
-      systemInstruction: getSystemPrompt()
-    });
-
-    const history = conversationHistory.slice(-10).map(msg => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.content }]
-    }));
-
-    const chat = model.startChat({
-      history,
-      generationConfig: {
-        maxOutputTokens: 500,
-        temperature: 0.3
-      }
-    });
-
-    let response = await chat.sendMessage(cleanMessage);
-    let result = response.response;
-
-    // Function calling loop (max 3 iterations)
-    const functionCallsUsed = [];
-    let iterations = 3;
-
-    while (iterations > 0) {
-      const candidate = result.candidates?.[0];
-      const parts = candidate?.content?.parts || [];
-      const functionCallPart = parts.find(p => p.functionCall);
-
-      if (!functionCallPart) break;
-
-      const { name: fnName, args: fnArgs } = functionCallPart.functionCall;
-      console.log(`[Chatbot] Function call: ${fnName}(${JSON.stringify(fnArgs)})`);
-      functionCallsUsed.push(fnName);
-
-      let functionResult;
-      try {
-        if (availableFunctions[fnName]) {
-          functionResult = await availableFunctions[fnName](fnArgs || {});
-        } else {
-          functionResult = { error: `Unknown function: ${fnName}` };
-        }
-      } catch (err) {
-        console.error(`[Chatbot] Function ${fnName} error:`, err.message);
-        functionResult = { error: 'Failed to retrieve hospital data. Please try again.' };
-      }
-
-      response = await chat.sendMessage([{
-        functionResponse: {
-          name: fnName,
-          response: { result: functionResult }
-        }
-      }]);
-      result = response.response;
-      iterations--;
-    }
-
-    const aiMessage = result.text();
-
-    // Layer 4: Output guardrails
-    const cleanOutput = validateOutput(aiMessage);
-
-    const shouldEscalate = [
-      'connect you with', 'speak to', 'talk to a human', 'escalate',
-      'billing department', 'connect with our staff'
-    ].some(kw => cleanOutput.toLowerCase().includes(kw));
-
-    const suggestions = determineSuggestions(functionCallsUsed);
-
-    return { message: cleanOutput, escalate: shouldEscalate, suggestions };
-
-  } catch (error) {
-    console.error('Gemini error:', error.message);
-    return {
-      message: "I apologize for the technical difficulty. Please contact our staff at 553-8906 or 0932-692-4708 for assistance.",
-      escalate: true,
-      suggestions: ['Contact Info', 'Talk to Staff']
-    };
+  // Layer 1: Input guardrails
+  const inputCheck = validateInput(message);
+  if (inputCheck.blocked) {
+    return { message: inputCheck.response, escalate: false, suggestions: ['Find a Doctor', 'Our Services', 'Contact Info'] };
   }
+  const cleanMessage = inputCheck.truncated || message;
+
+  if (!process.env.GEMINI_API_KEY) {
+    return getFallbackResponse(cleanMessage);
+  }
+
+  // Try each model in the fallback chain
+  for (const modelName of MODEL_CHAIN) {
+    try {
+      const result = await tryModelResponse(modelName, cleanMessage, conversationHistory);
+      return result;
+    } catch (error) {
+      const isRateLimit = error.message?.includes('429') || error.message?.includes('quota') || error.message?.includes('Too Many Requests');
+      console.error(`[Chatbot] ${modelName} failed:`, isRateLimit ? 'Rate limited / quota exceeded' : error.message);
+
+      if (isRateLimit) {
+        console.log(`[Chatbot] Trying next model in fallback chain...`);
+        continue;
+      }
+      // For other errors, still try next model as a safety net
+      console.log(`[Chatbot] Non-rate-limit error, trying next model...`);
+      continue;
+    }
+  }
+
+  // All models failed — gracefully degrade to keyword-based fallback
+  console.log('[Chatbot] All models exhausted, using keyword fallback');
+  return getFallbackResponse(cleanMessage);
+};
+
+/**
+ * Attempt to get a response from a specific Gemini model
+ */
+const tryModelResponse = async (modelName, cleanMessage, conversationHistory) => {
+  const model = genAI.getGenerativeModel({
+    model: modelName,
+    tools: [{ functionDeclarations }],
+    systemInstruction: getSystemPrompt()
+  });
+
+  // Build history, ensuring it starts with a 'user' role (Gemini requirement)
+  const mapped = conversationHistory.slice(-10).map(msg => ({
+    role: msg.role === 'user' ? 'user' : 'model',
+    parts: [{ text: msg.content }]
+  }));
+  // Drop leading 'model' messages — Gemini requires first message to be 'user'
+  const firstUserIdx = mapped.findIndex(m => m.role === 'user');
+  const history = firstUserIdx > 0 ? mapped.slice(firstUserIdx) : (firstUserIdx === 0 ? mapped : []);
+
+  const chat = model.startChat({
+    history,
+    generationConfig: {
+      maxOutputTokens: 500,
+      temperature: 0.3
+    }
+  });
+
+  let response = await chat.sendMessage(cleanMessage);
+  let result = response.response;
+
+  // Function calling loop (max 3 iterations)
+  const functionCallsUsed = [];
+  let iterations = 3;
+
+  while (iterations > 0) {
+    const candidate = result.candidates?.[0];
+    const parts = candidate?.content?.parts || [];
+    const functionCallPart = parts.find(p => p.functionCall);
+
+    if (!functionCallPart) break;
+
+    const { name: fnName, args: fnArgs } = functionCallPart.functionCall;
+    console.log(`[Chatbot] ${modelName} → ${fnName}(${JSON.stringify(fnArgs)})`);
+    functionCallsUsed.push(fnName);
+
+    let functionResult;
+    try {
+      if (availableFunctions[fnName]) {
+        functionResult = await availableFunctions[fnName](fnArgs || {});
+      } else {
+        functionResult = { error: `Unknown function: ${fnName}` };
+      }
+    } catch (err) {
+      console.error(`[Chatbot] Function ${fnName} error:`, err.message);
+      functionResult = { error: 'Failed to retrieve hospital data. Please try again.' };
+    }
+
+    response = await chat.sendMessage([{
+      functionResponse: {
+        name: fnName,
+        response: { result: functionResult }
+      }
+    }]);
+    result = response.response;
+    iterations--;
+  }
+
+  const aiMessage = result.text();
+
+  // Layer 4: Output guardrails
+  const cleanOutput = validateOutput(aiMessage);
+
+  const shouldEscalate = [
+    'connect you with', 'speak to', 'talk to a human', 'escalate',
+    'billing department', 'connect with our staff'
+  ].some(kw => cleanOutput.toLowerCase().includes(kw));
+
+  const suggestions = determineSuggestions(functionCallsUsed);
+  console.log(`[Chatbot] Response from ${modelName} ✓`);
+
+  return { message: cleanOutput, escalate: shouldEscalate, suggestions };
 };
 
 /**
